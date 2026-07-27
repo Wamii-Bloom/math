@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Bloom Wammy けいさんカード</title>
+  <title>けいさんカード</title>
   
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#fff9e6">
+  <meta name="theme-color" content="#f7f7f7">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon.png">
 
   <style>
-    /* 全体のやさしいデザイン */
+    /* 全体のデザイン（明暗をはっきりさせる） */
     body {
       font-family: 'Hiragino Maru Gothic ProN', 'Rounded M+ 1c', sans-serif;
-      background-color: #fff9e6;
-      color: #5d4037;
+      background-color: #f7f7f7; /* 明るいグレー寄りの白 */
+      color: #222222; /* ほぼ黒でくっきり見せる */
       text-align: center;
       margin: 0;
       padding: 0;
@@ -29,8 +29,8 @@
     }
     
     h1 {
-      font-size: 1.5rem;
-      color: #8d6e63;
+      font-size: 1.8rem;
+      color: #222222;
       margin-bottom: 15px;
     }
 
@@ -45,7 +45,7 @@
       display: flex;
     }
 
-    /* モード選択（たしざん・ひきざん） */
+    /* モード選択（けいさんカード1・2） */
     .mode-selector {
       margin-bottom: 20px;
     }
@@ -53,10 +53,11 @@
       font-size: 1.2rem;
       padding: 10px 20px;
       border-radius: 20px;
-      border: 2px solid #a1887f;
+      border: 2px solid #555555;
       background-color: white;
-      color: #5d4037;
+      color: #222222;
       outline: none;
+      font-weight: bold;
     }
 
     /* 記録表示エリア */
@@ -67,16 +68,18 @@
       width: 80%;
       max-width: 300px;
       margin-bottom: 20px;
-      box-shadow: 0 4px 10px rgba(141, 110, 99, 0.1);
+      border: 2px solid #dddddd;
       font-size: 1.1rem;
+      font-weight: bold;
     }
     .record-box div {
       margin: 5px 0;
     }
-    .best-time { color: #e91e63; font-weight: bold; }
-    .last-time { color: #2196f3; }
+    /* 色弱の方でも見やすい朱色と青 */
+    .best-time { color: #D55E00; } 
+    .last-time { color: #0072B2; }
 
-    /* プレイ画面の上のバー（戻るボタンと進行度） */
+    /* プレイ画面の上のバー */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -87,33 +90,32 @@
     }
     .back-btn {
       background: white;
-      border: 2px solid #a1887f;
+      border: 2px solid #555555;
       border-radius: 50%;
       width: 45px;
       height: 45px;
       font-size: 1.5rem;
-      color: #5d4037;
+      color: #222222;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .progress {
       font-size: 1.3rem;
       font-weight: bold;
-      color: #8d6e63;
+      color: #222222;
       background: white;
       padding: 5px 15px;
       border-radius: 20px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border: 2px solid #dddddd;
     }
 
     /* カード全体 */
     .card-container {
       background: white;
       border-radius: 25px;
-      box-shadow: 0 10px 20px rgba(141, 110, 99, 0.15);
+      border: 2px solid #cccccc;
       width: 85%;
       max-width: 320px;
       overflow: hidden;
@@ -125,7 +127,7 @@
     .question-box {
       background-color: #ffffff;
       padding: 35px 20px 20px 20px;
-      border-bottom: 2px dashed #f0e6d2;
+      border-bottom: 3px solid #eeeeee; /* 破線から見やすい実線に変更 */
     }
     .question {
       font-size: 4.5rem;
@@ -134,7 +136,7 @@
     }
 
     .answer-box {
-      background-color: #fff5e6;
+      background-color: #fdfdfd;
       padding: 20px;
       min-height: 90px;
       display: flex;
@@ -143,7 +145,7 @@
     }
     .answer {
       font-size: 4rem;
-      color: #ff7043;
+      color: #D55E00; /* 見やすい朱色 */
       font-weight: bold;
       visibility: hidden;
     }
@@ -151,7 +153,7 @@
       visibility: visible;
     }
 
-    /* ボタンエリア */
+    /* ボタンエリア（カラーユニバーサルデザイン） */
     button {
       font-size: 1.3rem;
       padding: 15px 40px;
@@ -159,30 +161,57 @@
       border-radius: 30px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       touch-action: manipulation;
       transition: all 0.2s ease;
     }
-    .btn-start { background-color: #4caf50; color: white; font-size: 1.5rem; width: 85%; max-width: 320px; }
-    .btn-answer { background-color: #ffb74d; color: white; }
-    .btn-next { background-color: #81c784; color: white; }
+    
+    /* スタート：青みのある緑（白文字） */
+    .btn-start { 
+      background-color: #009E73; 
+      color: white; 
+      font-size: 1.5rem; 
+      width: 85%; 
+      max-width: 320px; 
+    }
+    
+    /* こたえをみる：オレンジ（黒文字でコントラスト確保） */
+    .btn-answer { 
+      background-color: #E69F00; 
+      color: #222222; 
+    }
+    
+    /* つぎへ：濃い青（白文字） */
+    .btn-next { 
+      background-color: #0072B2; 
+      color: white; 
+    }
     
     /* 結果画面 */
-    .result-title { font-size: 2rem; color: #ff9800; margin-bottom: 20px; }
-    .result-time { font-size: 2.5rem; color: #e91e63; font-weight: bold; margin-bottom: 30px; }
-    .new-record { color: #ffeb3b; background: #e91e63; padding: 5px 15px; border-radius: 20px; font-size: 1.2rem; margin-bottom: 15px; display: none; }
+    .result-title { font-size: 2rem; color: #222222; margin-bottom: 20px; font-weight: bold; }
+    .result-time { font-size: 2.5rem; color: #D55E00; font-weight: bold; margin-bottom: 30px; }
+    .new-record { 
+      color: #222222; 
+      background: #F0E442; /* 見やすい黄色 */
+      padding: 5px 15px; 
+      border-radius: 20px; 
+      font-size: 1.2rem; 
+      margin-bottom: 15px; 
+      display: none; 
+      font-weight: bold;
+      border: 2px solid #222222;
+    }
   </style>
 </head>
 <body>
 
   <!-- 画面1：スタート画面 -->
   <div id="start-screen" class="screen active">
-    <h1>🌱 Bloom Wammy けいさんカード</h1>
+    <h1>けいさんカード</h1>
     
     <div class="mode-selector">
       <select id="mode" onchange="updateRecordsDisplay()">
-        <option value="add">たしざん</option>
-        <option value="sub">ひきざん</option>
+        <option value="add">けいさんカード1</option>
+        <option value="sub">けいさんカード2</option>
       </select>
     </div>
 
@@ -222,7 +251,6 @@
   </div>
 
   <script>
-    // PWA用のサービスワーカー
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
@@ -235,13 +263,11 @@
     let isAnswerShown = false;
     let startTime;
 
-    // 画面を切り替える機能
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
     }
 
-    // 記録の表示を更新する機能
     function updateRecordsDisplay() {
       const mode = document.getElementById('mode').value;
       const best = localStorage.getItem(`bestTime_${mode}`);
@@ -251,7 +277,6 @@
       document.getElementById('last-time-display').innerText = last ? formatTime(last) : '--:--';
     }
 
-    // ミリ秒を「00:00」の形にする機能
     function formatTime(ms) {
       const totalSeconds = Math.floor(ms / 1000);
       const minutes = Math.floor(totalSeconds / 60);
@@ -259,21 +284,18 @@
       return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
-    // スタート画面に戻る
     function goToStart() {
       updateRecordsDisplay();
       showScreen('start-screen');
     }
 
-    // ゲームスタート！
     function startGame() {
       currentQuestionNum = 1;
-      startTime = Date.now(); // 時間を測り始める
+      startTime = Date.now();
       generateQuestion();
       showScreen('play-screen');
     }
 
-    // 問題を作る機能
     function generateQuestion() {
       const mode = document.getElementById('mode').value;
       let num1, num2;
@@ -302,19 +324,16 @@
       isAnswerShown = false;
     }
 
-    // ボタンが押されたときの処理
     function handleButtonClick() {
       const answerElement = document.getElementById('answer');
       const btn = document.getElementById('actionBtn');
 
       if (!isAnswerShown) {
-        // 答えを表示
         answerElement.classList.add('show');
         btn.innerText = 'つぎへ ＞';
         btn.className = 'btn-next';
         isAnswerShown = true;
       } else {
-        // 次へ進むか、クリアか判定
         if (currentQuestionNum < TOTAL_QUESTIONS) {
           currentQuestionNum++;
           generateQuestion();
@@ -324,15 +343,13 @@
       }
     }
 
-    // 10問終わったときの処理
     function finishGame() {
       const endTime = Date.now();
-      const timeTaken = endTime - startTime; // かかった時間
+      const timeTaken = endTime - startTime;
       const mode = document.getElementById('mode').value;
       
       document.getElementById('final-time').innerText = formatTime(timeTaken);
       
-      // 記録の保存と新記録チェック
       const best = localStorage.getItem(`bestTime_${mode}`);
       const badge = document.getElementById('new-record-badge');
       
@@ -340,7 +357,7 @@
       
       if (!best || timeTaken < best) {
         localStorage.setItem(`bestTime_${mode}`, timeTaken);
-        badge.style.display = 'inline-block'; // 新記録バッジを表示
+        badge.style.display = 'inline-block';
       } else {
         badge.style.display = 'none';
       }
@@ -348,7 +365,6 @@
       showScreen('result-screen');
     }
 
-    // 最初にページを開いたときに記録を表示
     window.onload = updateRecordsDisplay;
   </script>
 </body>

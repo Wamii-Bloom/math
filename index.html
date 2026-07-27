@@ -45,16 +45,17 @@
       display: flex;
     }
 
-    .mode-selector { margin-bottom: 20px; }
+    .mode-selector { margin-bottom: 15px; }
     .mode-selector select {
-      font-size: 1.2rem;
-      padding: 10px 20px;
+      font-size: 1.1rem;
+      padding: 10px 15px;
       border-radius: 20px;
       border: 2px solid #555555;
       background-color: white;
       color: #222222;
       outline: none;
       font-weight: bold;
+      max-width: 90%;
     }
 
     .record-box {
@@ -113,12 +114,12 @@
       border-radius: 15px;
       width: 85%;
       max-width: 320px;
-      height: 160px;
+      height: 150px;
       display: flex;
       justify-content: center;
       align-items: center;
       box-shadow: 3px 5px 15px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     .card-hole {
       position: absolute; top: 15px; left: 15px; width: 20px; height: 20px;
@@ -131,37 +132,28 @@
       box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
     .question {
-      font-size: 4rem; font-weight: bold; letter-spacing: 5px;
+      font-size: 3.5rem; font-weight: bold; letter-spacing: 5px;
       color: #222222; z-index: 3;
     }
     
     /* ⭕️と❌のマーク */
     .maru-mark, .batsu-mark {
-      position: absolute; font-size: 9rem; opacity: 0;
+      position: absolute; font-size: 8rem; opacity: 0;
       pointer-events: none; transition: opacity 0.2s ease-in-out; z-index: 4;
     }
     .maru-mark { color: #D55E00; }
-    .batsu-mark { color: #0072B2; font-size: 8rem; }
+    .batsu-mark { color: #0072B2; font-size: 7rem; }
     .maru-mark.show, .batsu-mark.show { opacity: 0.7; }
 
-    /* 選択肢のレイアウト設定 */
+    /* 選択肢のレイアウト（常に10個：2行×5列） */
     .choices-container {
       display: grid;
+      grid-template-columns: repeat(5, 1fr);
       gap: 8px;
       width: 95%;
       max-width: 340px;
       margin-bottom: 15px;
     }
-    /* たしざん用（1〜18の18個：横6列×3行） */
-    .choices-add {
-      grid-template-columns: repeat(6, 1fr);
-    }
-    /* ひきざん用（1〜9の9個：横3列×3行） */
-    .choices-sub {
-      grid-template-columns: repeat(3, 1fr);
-      max-width: 260px; /* ひきざんは少し幅を狭めて押しやすく */
-    }
-
     .choice-btn {
       background-color: #0072B2;
       color: white;
@@ -174,10 +166,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 55px; 
+      font-size: 1.6rem;
     }
-    /* モードごとのボタンサイズ */
-    .choices-add .choice-btn { height: 45px; font-size: 1.3rem; }
-    .choices-sub .choice-btn { height: 60px; font-size: 2rem; }
     
     .choice-btn:active { transform: scale(0.95); }
     .choice-btn.wrong { background-color: #cccccc; color: #777777; box-shadow: none; }
@@ -194,7 +185,7 @@
     }
     .btn-start { background-color: #009E73; color: white; font-size: 1.5rem; width: 85%; }
     .btn-next { background-color: #E69F00; color: #222222; display: none; }
-    .btn-retry { background-color: #CC79A7; color: white; }
+    .btn-retry { background-color: #CC79A7; color: white; font-size: 1.1rem; }
 
     /* アニメーション演出 */
     @keyframes popIn {
@@ -209,9 +200,9 @@
     }
     .anime-active { animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     
-    .result-title { font-size: 2rem; color: #222222; margin-bottom: 15px; font-weight: bold; }
+    .result-title { font-size: 1.8rem; color: #222222; margin-bottom: 15px; font-weight: bold; }
     .result-time { font-size: 2.5rem; color: #D55E00; font-weight: bold; margin-bottom: 20px; }
-    .result-message { font-size: 1.3rem; margin-bottom: 20px; font-weight: bold; color: #0072B2; }
+    .result-message { font-size: 1.2rem; margin-bottom: 20px; font-weight: bold; color: #0072B2; }
     
     .new-record { 
       color: #222222; background: #F0E442; padding: 5px 20px; border-radius: 20px; 
@@ -226,9 +217,12 @@
     <h1>けいさんカード</h1>
     
     <div class="mode-selector">
+      <!-- 4つのモードに分けました -->
       <select id="mode" onchange="updateRecordsDisplay()">
-        <option value="add">けいさんカード1</option>
-        <option value="sub">けいさんカード2</option>
+        <option value="add1">たしざん1（くりあがりなし）</option>
+        <option value="add2">たしざん2（くりあがりあり）</option>
+        <option value="sub1">ひきざん1（くりさがりなし）</option>
+        <option value="sub2">ひきざん2（くりさがりあり）</option>
       </select>
     </div>
 
@@ -242,9 +236,8 @@
 
   <div id="play-screen" class="screen">
     <div class="top-bar">
-      <!-- おうちマークからリターン矢印に変更 -->
       <button class="back-btn" onclick="goToStart()">↩️</button>
-      <div class="progress"><span id="current-q">1</span> / <span id="total-q">81</span></div>
+      <div class="progress"><span id="current-q">1</span> / <span id="total-q">45</span></div>
     </div>
 
     <div class="flashcard">
@@ -255,8 +248,8 @@
       <div class="batsu-mark" id="batsu-mark">❌</div>
     </div>
 
-    <!-- 選択肢 -->
-    <div id="choices-container"></div>
+    <!-- 10個の選択肢がきれいに並ぶエリア -->
+    <div id="choices-container" class="choices-container"></div>
 
     <div class="next-area">
       <button id="next-btn" class="action-btn btn-next" onclick="goToNextQuestion()">つぎへ ＞</button>
@@ -316,27 +309,42 @@
       showScreen('start-screen');
     }
 
-    // 実際の計算カードと同じ順番で作る
+    // 学校の計算カードと全く同じ順番で問題を作ります
     function generateAllQuestions() {
       allQuestions = [];
       const mode = document.getElementById('mode').value;
       
-      if (mode === 'add') {
-        // たしざん（1+1, 1+2... 順番どおり）
+      if (mode === 'add1') {
+        // たしざん1（くりあがりなし：答えが10まで）
         for (let i = 1; i <= 9; i++) {
           for (let j = 1; j <= 9; j++) {
-            allQuestions.push({ qStr: `${i} + ${j}`, ans: i + j });
+            if (i + j <= 10) allQuestions.push({ qStr: `${i} + ${j}`, ans: i + j });
           }
         }
-      } else {
-        // ひきざん（ひく1のカード, ひく2のカード... 順番どおり）
-        for (let sub = 1; sub <= 9; sub++) {
-          for (let ans = 1; ans <= 9; ans++) {
-            allQuestions.push({ qStr: `${ans + sub} - ${sub}`, ans: ans });
+      } else if (mode === 'add2') {
+        // たしざん2（くりあがりあり：答えが11〜18）
+        for (let i = 2; i <= 9; i++) {
+          for (let j = 2; j <= 9; j++) {
+            if (i + j >= 11) allQuestions.push({ qStr: `${i} + ${j}`, ans: i + j });
+          }
+        }
+      } else if (mode === 'sub1') {
+        // ひきざん1（くりさがりなし：ひく1のカード、ひく2のカード...の順番）
+        for (let j = 1; j <= 9; j++) { // 引く数
+          for (let i = j + 1; i <= 10; i++) { // 引かれる数
+            allQuestions.push({ qStr: `${i} - ${j}`, ans: i - j });
+          }
+        }
+      } else if (mode === 'sub2') {
+        // ひきざん2（くりさがりあり：ひく2のカード、ひく3のカード...の順番）
+        for (let j = 2; j <= 9; j++) { // 引く数
+          for (let i = 11; i <= 18; i++) { // 引かれる数
+            if (i - j >= 1 && i - j <= 9 && (i % 10 < j)) {
+              allQuestions.push({ qStr: `${i} - ${j}`, ans: i - j });
+            }
           }
         }
       }
-      // シャッフルをなくし、順番通りに出題します
     }
 
     function startGame() {
@@ -348,7 +356,6 @@
 
     function startRetry() {
       playMode = 'retry';
-      // まちがえた問題は順番どおりにもう一度
       allQuestions = [...wrongQuestions];
       wrongQuestions = [];
       startSequence();
@@ -377,27 +384,22 @@
       createChoiceButtons();
     }
 
-    // モードに合わせた選択肢を作る
+    // 常に10個のボタンを作る仕組み
     function createChoiceButtons() {
       const container = document.getElementById('choices-container');
       container.innerHTML = ''; 
       const mode = document.getElementById('mode').value;
       const q = allQuestions[currentQuestionNum - 1];
 
-      let maxNum = mode === 'add' ? 18 : 9;
-      
-      // クラスを切り替えてレイアウトを変える
-      if (mode === 'add') {
-        container.className = 'choices-container choices-add';
-      } else {
-        container.className = 'choices-container choices-sub';
-      }
+      // くりあがりあり（add2）の時だけ 11〜20 を表示。それ以外は 1〜10 を表示。
+      let startNum = (mode === 'add2') ? 11 : 1;
 
-      for (let i = 1; i <= maxNum; i++) {
+      for (let i = 0; i < 10; i++) {
+        const num = startNum + i;
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
-        btn.innerText = i;
-        btn.onclick = () => handleChoice(btn, i, q.ans);
+        btn.innerText = num;
+        btn.onclick = () => handleChoice(btn, num, q.ans);
         container.appendChild(btn);
       }
     }
@@ -418,7 +420,6 @@
           if (b !== btn) b.classList.add('wrong');
         });
       } else {
-        // 間違えた時の❌アニメーション
         batsu.classList.add('show');
         setTimeout(() => { batsu.classList.remove('show'); }, 500);
 

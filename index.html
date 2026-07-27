@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="icon.png">
 
   <style>
-    /* 全体のデザイン（CUD配色を維持） */
+    /* 全体のデザイン */
     body {
       font-family: 'Hiragino Maru Gothic ProN', 'Rounded M+ 1c', sans-serif;
       background-color: #f7f7f7;
@@ -72,7 +72,7 @@
     .best-time { color: #D55E00; } 
     .last-time { color: #0072B2; }
 
-    /* 上部バー（おうちマークへ変更） */
+    /* 上部バー（矢印マーク） */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -134,48 +134,67 @@
       font-size: 4rem; font-weight: bold; letter-spacing: 5px;
       color: #222222; z-index: 3;
     }
-    .maru-mark {
-      position: absolute; font-size: 9rem; color: #D55E00; opacity: 0;
+    
+    /* ⭕️と❌のマーク */
+    .maru-mark, .batsu-mark {
+      position: absolute; font-size: 9rem; opacity: 0;
       pointer-events: none; transition: opacity 0.2s ease-in-out; z-index: 4;
     }
-    .maru-mark.show { opacity: 0.6; }
+    .maru-mark { color: #D55E00; }
+    .batsu-mark { color: #0072B2; font-size: 8rem; }
+    .maru-mark.show, .batsu-mark.show { opacity: 0.7; }
 
-    /* 10個の選択肢（2行×5列でスッキリ配置） */
+    /* 選択肢のレイアウト設定 */
     .choices-container {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
       gap: 8px;
-      width: 90%;
+      width: 95%;
       max-width: 340px;
       margin-bottom: 15px;
     }
+    /* たしざん用（1〜18の18個：横6列×3行） */
+    .choices-add {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    /* ひきざん用（1〜9の9個：横3列×3行） */
+    .choices-sub {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 260px; /* ひきざんは少し幅を狭めて押しやすく */
+    }
+
     .choice-btn {
       background-color: #0072B2;
       color: white;
-      font-size: 1.6rem;
       font-weight: bold;
-      height: 55px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0,0,0,0.2);
       touch-action: manipulation;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+    /* モードごとのボタンサイズ */
+    .choices-add .choice-btn { height: 45px; font-size: 1.3rem; }
+    .choices-sub .choice-btn { height: 60px; font-size: 2rem; }
+    
     .choice-btn:active { transform: scale(0.95); }
     .choice-btn.wrong { background-color: #cccccc; color: #777777; box-shadow: none; }
-    .choice-btn.correct { background-color: #D55E00; } /* 正解で朱色に光る */
+    .choice-btn.correct { background-color: #D55E00; }
 
-    .next-area { height: 60px; display: flex; align-items: center; justify-content: center; }
+    .next-area { height: 60px; display: flex; align-items: center; justify-content: center; width: 100%; }
 
-    /* ボタン共通 */
+    /* ボタン共通（文字が折り返さない設定） */
     button.action-btn {
-      font-size: 1.3rem; padding: 15px 40px; border: none; border-radius: 30px;
+      font-size: 1.3rem; padding: 15px 30px; border: none; border-radius: 30px;
       font-weight: bold; cursor: pointer; touch-action: manipulation; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      width: 85%; max-width: 320px; margin-bottom: 10px;
+      width: auto; min-width: 200px; max-width: 320px; margin-bottom: 10px;
+      white-space: nowrap; /* 文字の折り返しを防ぐ */
     }
-    .btn-start { background-color: #009E73; color: white; font-size: 1.5rem; }
+    .btn-start { background-color: #009E73; color: white; font-size: 1.5rem; width: 85%; }
     .btn-next { background-color: #E69F00; color: #222222; display: none; }
-    .btn-retry { background-color: #CC79A7; color: white; } /* CUDの赤紫（チャレンジ用） */
+    .btn-retry { background-color: #CC79A7; color: white; }
 
     /* アニメーション演出 */
     @keyframes popIn {
@@ -203,7 +222,6 @@
 </head>
 <body>
 
-  <!-- 画面1：スタート画面 -->
   <div id="start-screen" class="screen active">
     <h1>けいさんカード</h1>
     
@@ -222,11 +240,10 @@
     <button class="action-btn btn-start" onclick="startGame()">よーい、スタート！</button>
   </div>
 
-  <!-- 画面2：プレイ画面 -->
   <div id="play-screen" class="screen">
     <div class="top-bar">
-      <!-- カワイイおうちマークのボタン -->
-      <button class="back-btn" onclick="goToStart()">🏠</button>
+      <!-- おうちマークからリターン矢印に変更 -->
+      <button class="back-btn" onclick="goToStart()">↩️</button>
       <div class="progress"><span id="current-q">1</span> / <span id="total-q">81</span></div>
     </div>
 
@@ -235,17 +252,17 @@
       <div class="card-hole"></div>
       <div class="question" id="question">1 + 1</div>
       <div class="maru-mark" id="maru-mark">⭕️</div>
+      <div class="batsu-mark" id="batsu-mark">❌</div>
     </div>
 
-    <!-- 10個の選択肢 -->
-    <div class="choices-container" id="choices-container"></div>
+    <!-- 選択肢 -->
+    <div id="choices-container"></div>
 
     <div class="next-area">
       <button id="next-btn" class="action-btn btn-next" onclick="goToNextQuestion()">つぎへ ＞</button>
     </div>
   </div>
 
-  <!-- 画面3：結果発表画面 -->
   <div id="result-screen" class="screen">
     <div id="result-content">
       <div class="result-title" id="result-title">🎉 がんばったね！ 🎉</div>
@@ -254,7 +271,8 @@
       <div class="result-message" id="result-message"></div>
       
       <button id="retry-btn" class="action-btn btn-retry" onclick="startRetry()" style="display: none;">もう一度まちがえた問題にチャレンジ</button>
-      <button class="action-btn btn-start" onclick="goToStart()">🏠 さいしょにもどる</button>
+      <br>
+      <button class="action-btn btn-start" onclick="goToStart()">↩️ さいしょにもどる</button>
     </div>
   </div>
 
@@ -270,8 +288,8 @@
     let currentQuestionNum = 1;
     let startTime;
     let isAnswered = false;
-    let isFirstAttempt = true; // 1回目で正解したかのチェック
-    let playMode = 'normal'; // 'normal' または 'retry'
+    let isFirstAttempt = true;
+    let playMode = 'normal';
 
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -298,28 +316,27 @@
       showScreen('start-screen');
     }
 
-    // すべての81問を作成する
+    // 実際の計算カードと同じ順番で作る
     function generateAllQuestions() {
       allQuestions = [];
       const mode = document.getElementById('mode').value;
       
       if (mode === 'add') {
-        // たしざん（1+1 から 9+9 まで 全81問）
+        // たしざん（1+1, 1+2... 順番どおり）
         for (let i = 1; i <= 9; i++) {
           for (let j = 1; j <= 9; j++) {
             allQuestions.push({ qStr: `${i} + ${j}`, ans: i + j });
           }
         }
       } else {
-        // ひきざん（こたえが1〜9になる 全81問）
-        for (let ans = 1; ans <= 9; ans++) {
-          for (let sub = 1; sub <= 9; sub++) {
+        // ひきざん（ひく1のカード, ひく2のカード... 順番どおり）
+        for (let sub = 1; sub <= 9; sub++) {
+          for (let ans = 1; ans <= 9; ans++) {
             allQuestions.push({ qStr: `${ans + sub} - ${sub}`, ans: ans });
           }
         }
       }
-      // シャッフルする
-      allQuestions.sort(() => Math.random() - 0.5);
+      // シャッフルをなくし、順番通りに出題します
     }
 
     function startGame() {
@@ -331,9 +348,9 @@
 
     function startRetry() {
       playMode = 'retry';
-      // まちがえた問題を今回の問題リストにコピーし、シャッフル
-      allQuestions = [...wrongQuestions].sort(() => Math.random() - 0.5);
-      wrongQuestions = []; // もう一度まちがえた時用にリセット
+      // まちがえた問題は順番どおりにもう一度
+      allQuestions = [...wrongQuestions];
+      wrongQuestions = [];
       startSequence();
     }
 
@@ -354,50 +371,57 @@
       document.getElementById('current-q').innerText = currentQuestionNum;
       
       document.getElementById('maru-mark').classList.remove('show');
+      document.getElementById('batsu-mark').classList.remove('show');
       document.getElementById('next-btn').style.display = 'none';
 
-      createChoiceButtons(q.ans);
+      createChoiceButtons();
     }
 
-    // 10個の選択肢を並べる
-    function createChoiceButtons(correctAnswer) {
+    // モードに合わせた選択肢を作る
+    function createChoiceButtons() {
       const container = document.getElementById('choices-container');
       container.innerHTML = ''; 
+      const mode = document.getElementById('mode').value;
+      const q = allQuestions[currentQuestionNum - 1];
 
-      let choices = [];
-      // 答えの数字を中心に、連続した10個の数字を作る（例：答えが8なら、4〜13）
-      let startNum = correctAnswer - 4;
-      if (startNum < 1) startNum = 1;
-      if (startNum + 9 > 18) startNum = 9; // 最大の答えが18（9+9）なので調整
-
-      for (let i = 0; i < 10; i++) {
-        choices.push(startNum + i);
+      let maxNum = mode === 'add' ? 18 : 9;
+      
+      // クラスを切り替えてレイアウトを変える
+      if (mode === 'add') {
+        container.className = 'choices-container choices-add';
+      } else {
+        container.className = 'choices-container choices-sub';
       }
 
-      // ボタンを10個配置
-      choices.forEach(number => {
+      for (let i = 1; i <= maxNum; i++) {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
-        btn.innerText = number;
-        btn.onclick = () => handleChoice(btn, number, correctAnswer);
+        btn.innerText = i;
+        btn.onclick = () => handleChoice(btn, i, q.ans);
         container.appendChild(btn);
-      });
+      }
     }
 
     function handleChoice(btn, selectedNumber, correctAnswer) {
       if (isAnswered) return; 
 
+      const batsu = document.getElementById('batsu-mark');
+
       if (selectedNumber === correctAnswer) {
         isAnswered = true;
         btn.classList.add('correct');
         document.getElementById('maru-mark').classList.add('show');
+        batsu.classList.remove('show');
         document.getElementById('next-btn').style.display = 'block';
         
         document.querySelectorAll('.choice-btn').forEach(b => {
           if (b !== btn) b.classList.add('wrong');
         });
       } else {
-        // 1回目に間違えた時だけ「苦手リスト」に追加
+        // 間違えた時の❌アニメーション
+        batsu.classList.add('show');
+        setTimeout(() => { batsu.classList.remove('show'); }, 500);
+
         if (isFirstAttempt) {
           wrongQuestions.push(allQuestions[currentQuestionNum - 1]);
           isFirstAttempt = false;
@@ -427,35 +451,32 @@
       const message = document.getElementById('result-message');
       const retryBtn = document.getElementById('retry-btn');
       
-      // アニメーションのリセットと発動
       const content = document.getElementById('result-content');
       content.classList.remove('anime-active');
-      void content.offsetWidth; // アニメーションを再起動するおまじない
+      void content.offsetWidth; 
       content.classList.add('anime-active');
 
       document.getElementById('final-time').innerText = formatTime(timeTaken);
       badge.style.display = 'none';
 
-      // タイム記録は「最初の81問」を通しでやった時だけ保存する
       if (playMode === 'normal') {
         const best = localStorage.getItem(`bestTime_${mode}`);
         localStorage.setItem(`lastTime_${mode}`, timeTaken);
         
         if (!best || timeTaken < best) {
           localStorage.setItem(`bestTime_${mode}`, timeTaken);
-          badge.style.display = 'inline-block'; // 新記録アニメーション！
+          badge.style.display = 'inline-block'; 
         }
       }
 
-      // 苦手問題があるかどうかで画面を分ける
       if (wrongQuestions.length > 0) {
         title.innerText = "🎉 がんばったね！ 🎉";
         message.innerText = `あやふやなもんだいが ${wrongQuestions.length}問 あったよ！`;
-        retryBtn.style.display = 'inline-block'; // チャレンジボタンを表示
+        retryBtn.style.display = 'inline-block'; 
       } else {
         title.innerText = "🎉 がんばったね！えらい！ 🎉";
         message.innerText = "✨ ぜんもんせいかい！パーフェクト！ ✨";
-        retryBtn.style.display = 'none'; // チャレンジボタンを隠す
+        retryBtn.style.display = 'none'; 
       }
 
       showScreen('result-screen');

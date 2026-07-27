@@ -12,11 +12,11 @@
   <link rel="apple-touch-icon" href="icon.png">
 
   <style>
-    /* 全体のデザイン（明暗をはっきりさせる） */
+    /* 全体のデザイン */
     body {
       font-family: 'Hiragino Maru Gothic ProN', 'Rounded M+ 1c', sans-serif;
-      background-color: #f7f7f7; /* 明るいグレー寄りの白 */
-      color: #222222; /* ほぼ黒でくっきり見せる */
+      background-color: #f7f7f7;
+      color: #222222;
       text-align: center;
       margin: 0;
       padding: 0;
@@ -34,7 +34,7 @@
       margin-bottom: 15px;
     }
 
-    /* 各画面の切り替え用 */
+    /* 画面の切り替え */
     .screen {
       display: none;
       flex-direction: column;
@@ -45,7 +45,7 @@
       display: flex;
     }
 
-    /* モード選択（けいさんカード1・2） */
+    /* メニュー選択 */
     .mode-selector {
       margin-bottom: 20px;
     }
@@ -60,7 +60,7 @@
       font-weight: bold;
     }
 
-    /* 記録表示エリア */
+    /* 記録表示 */
     .record-box {
       background: white;
       border-radius: 15px;
@@ -72,21 +72,18 @@
       font-size: 1.1rem;
       font-weight: bold;
     }
-    .record-box div {
-      margin: 5px 0;
-    }
-    /* 色弱の方でも見やすい朱色と青 */
+    .record-box div { margin: 5px 0; }
     .best-time { color: #D55E00; } 
     .last-time { color: #0072B2; }
 
-    /* プレイ画面の上のバー */
+    /* 上部バー（戻るボタン・進行度） */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 85%;
       max-width: 320px;
-      margin-bottom: 10px;
+      margin-bottom: 20px; /* カードとの隙間を少し広げました */
     }
     .back-btn {
       background: white;
@@ -111,50 +108,117 @@
       border: 2px solid #dddddd;
     }
 
-    /* カード全体 */
-    .card-container {
-      background: white;
-      border-radius: 25px;
+    /* 🌟 本物の計算カード風デザイン 🌟 */
+    .flashcard {
+      position: relative;
+      background-color: #ffffff;
       border: 2px solid #cccccc;
+      border-radius: 15px;
       width: 85%;
       max-width: 320px;
-      overflow: hidden;
-      margin-bottom: 30px;
+      height: 180px;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 3px 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
     }
 
-    .question-box {
-      background-color: #ffffff;
-      padding: 35px 20px 20px 20px;
-      border-bottom: 3px solid #eeeeee; /* 破線から見やすい実線に変更 */
+    /* カードの左上の穴 */
+    .card-hole {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 25px;
+      height: 25px;
+      background-color: #f7f7f7;
+      border-radius: 50%;
+      border: 1px solid #cccccc;
+      box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
+      z-index: 1;
     }
+
+    /* カードのリング（金具） */
+    .card-ring {
+      position: absolute;
+      top: -15px;
+      left: 17px;
+      width: 20px;
+      height: 45px;
+      border: 5px solid #aaaaaa;
+      border-radius: 15px;
+      z-index: 2;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* 問題の文字 */
     .question {
       font-size: 4.5rem;
       font-weight: bold;
       letter-spacing: 5px;
+      color: #222222;
+      z-index: 3;
     }
 
-    .answer-box {
-      background-color: #fdfdfd;
-      padding: 20px;
-      min-height: 90px;
+    /* 正解したときの大きな「マル」 */
+    .maru-mark {
+      position: absolute;
+      font-size: 10rem;
+      color: #D55E00; /* CUDの朱色 */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-in-out;
+      z-index: 4;
+    }
+    .maru-mark.show {
+      opacity: 0.6;
+    }
+
+    /* 答えを選ぶボタンのエリア */
+    .choices-container {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .choice-btn {
+      background-color: #0072B2; /* CUDの青 */
+      color: white;
+      font-size: 2.2rem;
+      font-weight: bold;
+      width: 80px;
+      height: 80px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: all 0.1s ease;
+      touch-action: manipulation;
+    }
+    .choice-btn:active {
+      transform: scale(0.95);
+    }
+    .choice-btn.wrong {
+      background-color: #cccccc;
+      color: #777777;
+      box-shadow: none;
+    }
+    .choice-btn.correct {
+      background-color: #D55E00; /* 正解したら朱色に光る */
+    }
+
+    /* 次へ進むエリア（最初は隠しておく） */
+    .next-area {
+      height: 60px; /* 高さを確保して画面のガタつきを防ぐ */
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .answer {
-      font-size: 4rem;
-      color: #D55E00; /* 見やすい朱色 */
-      font-weight: bold;
-      visibility: hidden;
-    }
-    .answer.show {
-      visibility: visible;
-    }
 
-    /* ボタンエリア（カラーユニバーサルデザイン） */
-    button {
+    /* スタート・次へ・戻る などの基本ボタン */
+    button.action-btn {
       font-size: 1.3rem;
       padding: 15px 40px;
       border: none;
@@ -162,36 +226,26 @@
       font-weight: bold;
       cursor: pointer;
       touch-action: manipulation;
-      transition: all 0.2s ease;
     }
-    
-    /* スタート：青みのある緑（白文字） */
     .btn-start { 
-      background-color: #009E73; 
+      background-color: #009E73; /* CUDの緑 */
       color: white; 
       font-size: 1.5rem; 
       width: 85%; 
       max-width: 320px; 
     }
-    
-    /* こたえをみる：オレンジ（黒文字でコントラスト確保） */
-    .btn-answer { 
-      background-color: #E69F00; 
-      color: #222222; 
-    }
-    
-    /* つぎへ：濃い青（白文字） */
     .btn-next { 
-      background-color: #0072B2; 
-      color: white; 
+      background-color: #E69F00; /* CUDのオレンジ */
+      color: #222222; 
+      display: none; /* 最初は隠す */
     }
-    
+
     /* 結果画面 */
     .result-title { font-size: 2rem; color: #222222; margin-bottom: 20px; font-weight: bold; }
     .result-time { font-size: 2.5rem; color: #D55E00; font-weight: bold; margin-bottom: 30px; }
     .new-record { 
       color: #222222; 
-      background: #F0E442; /* 見やすい黄色 */
+      background: #F0E442;
       padding: 5px 15px; 
       border-radius: 20px; 
       font-size: 1.2rem; 
@@ -220,7 +274,7 @@
       <div class="last-time">🕒 ぜんかい: <span id="last-time-display">--:--</span></div>
     </div>
 
-    <button class="btn-start" onclick="startGame()">よーい、スタート！</button>
+    <button class="action-btn btn-start" onclick="startGame()">よーい、スタート！</button>
   </div>
 
   <!-- 画面2：プレイ画面 -->
@@ -230,16 +284,23 @@
       <div class="progress"><span id="current-q">1</span> / 10</div>
     </div>
 
-    <div class="card-container">
-      <div class="question-box">
-        <div class="question" id="question">1 + 1</div>
-      </div>
-      <div class="answer-box">
-        <div class="answer" id="answer">2</div>
-      </div>
+    <!-- 🌟 計算カード本体 -->
+    <div class="flashcard">
+      <div class="card-ring"></div>
+      <div class="card-hole"></div>
+      <div class="question" id="question">1 + 1</div>
+      <div class="maru-mark" id="maru-mark">⭕️</div>
     </div>
 
-    <button id="actionBtn" class="btn-answer" onclick="handleButtonClick()">こたえをみる</button>
+    <!-- 答えを選ぶボタン（3つ） -->
+    <div class="choices-container" id="choices-container">
+      <!-- JavaScriptでボタンを作ります -->
+    </div>
+
+    <!-- 次へボタン -->
+    <div class="next-area">
+      <button id="next-btn" class="action-btn btn-next" onclick="goToNextQuestion()">つぎへ ＞</button>
+    </div>
   </div>
 
   <!-- 画面3：結果発表画面 -->
@@ -247,7 +308,7 @@
     <div class="result-title">🎉 よくがんばったね！ 🎉</div>
     <div id="new-record-badge" class="new-record">✨ 新記録達成！ ✨</div>
     <div class="result-time" id="final-time">00:00</div>
-    <button class="btn-start" onclick="goToStart()">さいしょにもどる</button>
+    <button class="action-btn btn-start" onclick="goToStart()">さいしょにもどる</button>
   </div>
 
   <script>
@@ -260,8 +321,8 @@
     const TOTAL_QUESTIONS = 10;
     let currentQuestionNum = 1;
     let currentAnswer = 0;
-    let isAnswerShown = false;
     let startTime;
+    let isAnswered = false; // 答えを選んだかどうかのチェック
 
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -297,9 +358,11 @@
     }
 
     function generateQuestion() {
+      isAnswered = false;
       const mode = document.getElementById('mode').value;
       let num1, num2;
 
+      // 問題の作成
       if (mode === 'add') {
         num1 = Math.floor(Math.random() * 9) + 1;
         num2 = Math.floor(Math.random() * 9) + 1;
@@ -314,32 +377,76 @@
 
       document.getElementById('current-q').innerText = currentQuestionNum;
       
-      const answerElement = document.getElementById('answer');
-      answerElement.innerText = currentAnswer;
-      answerElement.classList.remove('show');
+      // まるマークと次へボタンを隠す
+      document.getElementById('maru-mark').classList.remove('show');
+      document.getElementById('next-btn').style.display = 'none';
 
-      const btn = document.getElementById('actionBtn');
-      btn.innerText = 'こたえをみる';
-      btn.className = 'btn-answer';
-      isAnswerShown = false;
+      // 3つの選択肢を作る
+      createChoiceButtons();
     }
 
-    function handleButtonClick() {
-      const answerElement = document.getElementById('answer');
-      const btn = document.getElementById('actionBtn');
+    function createChoiceButtons() {
+      const container = document.getElementById('choices-container');
+      container.innerHTML = ''; // ボタンを一度リセット
 
-      if (!isAnswerShown) {
-        answerElement.classList.add('show');
-        btn.innerText = 'つぎへ ＞';
-        btn.className = 'btn-next';
-        isAnswerShown = true;
-      } else {
-        if (currentQuestionNum < TOTAL_QUESTIONS) {
-          currentQuestionNum++;
-          generateQuestion();
-        } else {
-          finishGame();
+      // 正解と、ダミーの数字を2つ用意する
+      let choices = [currentAnswer];
+      while (choices.length < 3) {
+        // 正解に近い数字（±1〜3）をランダムに作る
+        let offset = Math.floor(Math.random() * 3) + 1;
+        let isPlus = Math.random() < 0.5;
+        let dummy = isPlus ? currentAnswer + offset : currentAnswer - offset;
+        
+        // マイナスの答えにならないようにしつつ、同じ数字が被らないようにする
+        if (dummy >= 0 && !choices.includes(dummy)) {
+          choices.push(dummy);
         }
+      }
+
+      // 選択肢の順番をシャッフルする
+      choices.sort(() => Math.random() - 0.5);
+
+      // ボタンを画面に追加する
+      choices.forEach(number => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerText = number;
+        btn.onclick = () => handleChoice(btn, number);
+        container.appendChild(btn);
+      });
+    }
+
+    // 選択肢が押された時の動き
+    function handleChoice(btn, selectedNumber) {
+      if (isAnswered) return; // すでに正解している場合は押せないようにする
+
+      if (selectedNumber === currentAnswer) {
+        // 🎉 大正解のとき！
+        isAnswered = true;
+        btn.classList.add('correct');
+        document.getElementById('maru-mark').classList.add('show');
+        document.getElementById('next-btn').style.display = 'block'; // つぎへボタンを出す
+        
+        // 正解以外のボタンを少し薄くする
+        document.querySelectorAll('.choice-btn').forEach(b => {
+          if (b !== btn) b.classList.add('wrong');
+        });
+      } else {
+        // ざんねん！ちがうとき（ボタンをグレーにしてもう一度考えられるようにする）
+        btn.classList.add('wrong');
+        // 少し揺れるアニメーション（オプション）
+        btn.style.transform = 'translateX(-5px)';
+        setTimeout(() => btn.style.transform = 'translateX(5px)', 100);
+        setTimeout(() => btn.style.transform = 'translateX(0)', 200);
+      }
+    }
+
+    function goToNextQuestion() {
+      if (currentQuestionNum < TOTAL_QUESTIONS) {
+        currentQuestionNum++;
+        generateQuestion();
+      } else {
+        finishGame();
       }
     }
 

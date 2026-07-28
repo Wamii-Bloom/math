@@ -9,7 +9,8 @@
   <meta name="theme-color" content="#f7f7f7">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="icon.png">
+  <!-- 🌟 アイコンのファイル名を大文字の「icon.PNG」に修正しました！ 🌟 -->
+  <link rel="apple-touch-icon" href="icon.PNG">
 
   <style>
     /* 全体のデザイン */
@@ -45,17 +46,34 @@
       display: flex;
     }
 
-    .mode-selector { margin-bottom: 15px; }
-    .mode-selector select {
-      font-size: 1.2rem;
-      padding: 10px 20px;
-      border-radius: 20px;
-      border: 2px solid #555555;
+    /* 4つのモード選択ボタン */
+    .mode-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+      width: 90%;
+      max-width: 320px;
+    }
+    .mode-btn {
       background-color: white;
-      color: #222222;
-      outline: none;
+      border: 2px solid #cccccc;
+      color: #555555;
+      font-size: 1.1rem;
+      padding: 12px 5px;
+      border-radius: 12px;
       font-weight: bold;
-      max-width: 90%;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      touch-action: manipulation;
+    }
+    .mode-btn.active {
+      border: 2px solid #0072B2;
+      background-color: #e6f2f8;
+      color: #0072B2;
+      box-shadow: 0 2px 6px rgba(0,114,178,0.2);
     }
 
     .record-box {
@@ -73,7 +91,7 @@
     .best-time { color: #D55E00; } 
     .last-time { color: #0072B2; }
 
-    /* 上部バー（タイマー追加のため少し調整） */
+    /* 上部バー */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -106,7 +124,7 @@
       border-radius: 20px;
       border: 2px solid #dddddd;
     }
-    .timer-display { color: #D55E00; } /* タイマーは少し目立つ色に */
+    .timer-display { color: #D55E00; }
 
     /* 計算カード本体 */
     .flashcard {
@@ -215,18 +233,18 @@
 </head>
 <body>
 
+  <!-- スタート画面 -->
   <div id="start-screen" class="screen active">
     <h1>けいさんカード</h1>
     
-    <div class="mode-selector">
-      <!-- メニューの文字をスッキリさせました -->
-      <select id="mode" onchange="updateRecordsDisplay()">
-        <option value="add1">たしざん1</option>
-        <option value="add2">たしざん2</option>
-        <option value="sub1">ひきざん1</option>
-        <option value="sub2">ひきざん2</option>
-      </select>
+    <div class="mode-buttons">
+      <button class="mode-btn active" id="btn-add1" onclick="selectMode('add1')">たしざん1</button>
+      <button class="mode-btn" id="btn-add2" onclick="selectMode('add2')">たしざん2</button>
+      <button class="mode-btn" id="btn-sub1" onclick="selectMode('sub1')">ひきざん1</button>
+      <button class="mode-btn" id="btn-sub2" onclick="selectMode('sub2')">ひきざん2</button>
     </div>
+    
+    <input type="hidden" id="mode" value="add1">
 
     <div class="record-box">
       <div class="best-time">👑 ベストタイム: <span id="best-time-display">--:--</span></div>
@@ -236,10 +254,10 @@
     <button class="action-btn btn-start" onclick="startGame()">よーい、スタート！</button>
   </div>
 
+  <!-- プレイ画面 -->
   <div id="play-screen" class="screen">
     <div class="top-bar">
       <button class="back-btn" onclick="goToStart()">↩️</button>
-      <!-- リアルタイムで動くタイマーを追加しました -->
       <div class="timer-display">⏱ <span id="current-time">00:00</span></div>
       <div class="progress"><span id="current-q">1</span> / <span id="total-q">45</span></div>
     </div>
@@ -259,6 +277,7 @@
     </div>
   </div>
 
+  <!-- 結果画面 -->
   <div id="result-screen" class="screen">
     <div id="result-content">
       <div class="result-title" id="result-title">🎉 がんばったね！ 🎉</div>
@@ -286,11 +305,20 @@
     let isAnswered = false;
     let isFirstAttempt = true;
     let playMode = 'normal';
-    let timerInterval; // タイマーを動かすための変数
+    let timerInterval;
 
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
+    }
+
+    function selectMode(selectedMode) {
+      document.getElementById('mode').value = selectedMode;
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.getElementById('btn-' + selectedMode).classList.add('active');
+      updateRecordsDisplay();
     }
 
     function updateRecordsDisplay() {
@@ -308,7 +336,6 @@
       return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
-    // タイマーの表示を更新する機能
     function updateTimerDisplay() {
       const now = Date.now();
       const ms = now - startTime;
@@ -316,7 +343,7 @@
     }
 
     function goToStart() {
-      clearInterval(timerInterval); // 途中で戻る時はタイマーを止める
+      clearInterval(timerInterval);
       updateRecordsDisplay();
       showScreen('start-screen');
     }
@@ -375,10 +402,9 @@
       startTime = Date.now();
       document.getElementById('total-q').innerText = allQuestions.length;
       
-      // 🌟 ここでタイマーをスタートさせます 🌟
       clearInterval(timerInterval);
       timerInterval = setInterval(updateTimerDisplay, 1000);
-      updateTimerDisplay(); // 最初の00:00をすぐ表示
+      updateTimerDisplay();
       
       showNextQuestion();
       showScreen('play-screen');
@@ -457,7 +483,7 @@
     }
 
     function finishGame() {
-      clearInterval(timerInterval); // ゴールしたらタイマーを止める！
+      clearInterval(timerInterval);
       
       const endTime = Date.now();
       const timeTaken = endTime - startTime;

@@ -79,7 +79,6 @@
       box-shadow: 0 2px 6px rgba(0,114,178,0.2);
     }
     
-    /* よく間違える問題ボタン */
     .weak-btn {
       grid-column: span 2;
       background-color: #fff9e6;
@@ -92,22 +91,20 @@
       color: #D55E00;
     }
 
-    /* 🌟 記録の表示を控えめに、スッキリさせました 🌟 */
     .record-box {
       background: transparent;
       border: none;
       padding: 5px;
       width: 90%;
       max-width: 300px;
-      margin-bottom: 25px; /* スタートボタンとの間隔をあけて中央感をアップ */
-      font-size: 0.9rem; /* 文字を少し小さく */
+      margin-bottom: 25px;
+      font-size: 0.9rem;
       position: relative;
     }
     .record-box div { margin: 3px 0; }
     .best-time { color: #666666; } 
     .last-time { color: #888888; }
 
-    /* 🌟 リセットボタンも目立ちすぎない優しいデザインに 🌟 */
     .reset-btn {
       font-family: inherit;
       background: transparent;
@@ -169,7 +166,7 @@
       justify-content: center;
       align-items: center;
       box-shadow: 3px 5px 15px rgba(0,0,0,0.1);
-      margin-bottom: 15px;
+      margin-bottom: 25px; /* ボタンを消した分、少し余白を広く */
     }
     .card-hole {
       position: absolute; top: 15px; left: 15px; width: 20px; height: 20px;
@@ -226,8 +223,6 @@
     .choice-btn.wrong { background-color: #cccccc; color: #777777; box-shadow: none; }
     .choice-btn.correct { background-color: #D55E00; }
 
-    .next-area { height: 60px; display: flex; align-items: center; justify-content: center; width: 100%; }
-
     /* ボタン共通 */
     button.action-btn {
       font-family: inherit;
@@ -237,37 +232,36 @@
       white-space: normal;
       line-height: 1.4;
     }
-    /* 🌟 スタートボタンの存在感をアップ！ 🌟 */
     .btn-start { 
       background-color: #009E73; 
       color: white; 
       font-size: 1.5rem; 
       padding: 18px 20px;
     }
-    .btn-next { background-color: #E69F00; color: #222222; display: none; }
-    .btn-retry { background-color: #CC79A7; color: white; }
+    .btn-retry { background-color: #CC79A7; color: white; margin-top: 10px;}
 
-    /* アニメーション */
+    /* アニメーションとすごい感の演出 */
     @keyframes popIn {
       0% { transform: scale(0.5); opacity: 0; }
       70% { transform: scale(1.1); opacity: 1; }
       100% { transform: scale(1); opacity: 1; }
     }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+    /* 🌟 新記録のときに色がカラフルに変わるアニメーション！ 🌟 */
+    @keyframes rainbowPulse {
+      0% { transform: scale(1); background-color: #F0E442; color: #222; }
+      50% { transform: scale(1.05); background-color: #ffb3ba; color: #b20000; }
+      100% { transform: scale(1); background-color: #F0E442; color: #222; }
     }
     .anime-active { animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     
-    .result-title { font-size: 1.8rem; color: #222222; margin-bottom: 15px; font-weight: bold; }
-    .result-time { font-size: 2.5rem; color: #D55E00; font-weight: bold; margin-bottom: 20px; }
-    .result-message { font-size: 1.2rem; margin-bottom: 20px; font-weight: bold; color: #0072B2; }
+    .result-title { font-size: 1.8rem; color: #222222; margin-bottom: 15px; font-weight: bold; line-height: 1.3;}
+    .result-time { font-size: 2.8rem; color: #D55E00; font-weight: bold; margin-bottom: 20px; }
+    .result-message { font-size: 1.3rem; margin-bottom: 20px; font-weight: bold; color: #0072B2; }
     
     .new-record { 
-      color: #222222; background: #F0E442; padding: 5px 20px; border-radius: 20px; 
+      padding: 10px 20px; border-radius: 20px; 
       font-size: 1.2rem; margin-bottom: 15px; display: none; font-weight: bold;
-      border: 2px solid #222222; animation: pulse 1s infinite;
+      border: 3px solid #D55E00; animation: rainbowPulse 1s infinite;
     }
   </style>
 </head>
@@ -287,14 +281,12 @@
     
     <input type="hidden" id="mode" value="add1">
 
-    <!-- 🌟 背景の枠をなくして、文字色を落ち着かせました 🌟 -->
     <div class="record-box">
       <div class="best-time">👑 ベストタイム: <span id="best-time-display">--:--</span></div>
       <div class="last-time">🕒 ぜんかい: <span id="last-time-display">--:--</span></div>
       <button class="reset-btn" onclick="resetRecord()">🔄 記録をリセット</button>
     </div>
 
-    <!-- 🌟 ドンッと中央で目立つスタートボタン 🌟 -->
     <button class="action-btn btn-start" onclick="startGame()">よーい、スタート！</button>
   </div>
 
@@ -315,23 +307,21 @@
     </div>
 
     <div id="choices-container" class="choices-container"></div>
-
-    <div class="next-area">
-      <button id="next-btn" class="action-btn btn-next" onclick="goToNextQuestion()">つぎへ ＞</button>
-    </div>
+    
+    <!-- 🌟 つぎへボタンは自動で進むので削除しました！ 🌟 -->
   </div>
 
   <!-- 結果画面 -->
   <div id="result-screen" class="screen">
     <div id="result-content">
       <div class="result-title" id="result-title">🎉 がんばったね！ 🎉</div>
-      <div id="new-record-badge" class="new-record">✨ 新記録達成！ ✨</div>
+      <!-- 🌟 新記録のテキストを大げさなくらい褒める言葉に変更！ 🌟 -->
+      <div id="new-record-badge" class="new-record">🎉 ドドドドーン！ 新記録達成！<br>すごすぎる！ 🎉</div>
       <div class="result-time" id="final-time">00:00</div>
       <div class="result-message" id="result-message"></div>
       
       <button id="retry-btn" class="action-btn btn-retry" onclick="startRetry()" style="display: none;">もう１回 ちょうせん！</button>
-      <br>
-      <button class="action-btn btn-start" onclick="goToStart()">↩️ さいしょにもどる</button>
+      <button class="action-btn btn-start" onclick="goToStart()" style="background-color: #555555;">↩️ さいしょにもどる</button>
     </div>
   </div>
 
@@ -340,6 +330,66 @@
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
       });
+    }
+
+    // 🌟 音を鳴らすための魔法（Web Audio API）の設定 🌟
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      // スマホの制限を解除するための無音再生
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      gain.gain.value = 0;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.1);
+    }
+
+    function playSound(type) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      if (type === 'correct') {
+        // ピンポーン♪
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime); // 高い音
+        osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.1); // もっと高い音
+        gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.4);
+      } else if (type === 'wrong') {
+        // ブッブー
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.3);
+        gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.3);
+      } else if (type === 'perfect') {
+        // チャラララーン♪（パーフェクト用ファンファーレ）
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // ド
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15); // ミ
+        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.3); // ソ
+        osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.45); // 高いド
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 1.2);
+      }
     }
 
     let allQuestions = [];
@@ -461,6 +511,7 @@
     }
 
     function startGame() {
+      initAudio(); // 音を鳴らす準備をします！
       playMode = 'normal';
       wrongQuestions = [];
       const canStart = generateAllQuestions();
@@ -470,6 +521,7 @@
     }
 
     function startRetry() {
+      initAudio(); 
       playMode = 'retry';
       allQuestions = [...wrongQuestions].sort(() => Math.random() - 0.5);
       wrongQuestions = [];
@@ -499,7 +551,6 @@
       
       document.getElementById('maru-mark').classList.remove('show');
       document.getElementById('batsu-mark').classList.remove('show');
-      document.getElementById('next-btn').style.display = 'none';
 
       createChoiceButtons();
     }
@@ -537,8 +588,9 @@
         btn.classList.add('correct');
         document.getElementById('maru-mark').classList.add('show');
         batsu.classList.remove('show');
-        document.getElementById('next-btn').style.display = 'block';
         
+        playSound('correct'); // 🌟 正解の音を鳴らす 🌟
+
         document.querySelectorAll('.choice-btn').forEach(b => {
           if (b !== btn) b.classList.add('wrong');
         });
@@ -549,7 +601,13 @@
           localStorage.setItem('weakQuestions', JSON.stringify(weakQ));
         }
 
+        // 🌟 0.8秒待ってから、自動で次の問題へ！ 🌟
+        setTimeout(() => {
+          goToNextQuestion();
+        }, 800);
+
       } else {
+        playSound('wrong'); // 🌟 間違いの音を鳴らす 🌟
         batsu.classList.add('show');
         setTimeout(() => { batsu.classList.remove('show'); }, 500);
 
@@ -610,13 +668,15 @@
         }
       }
 
+      // 🌟 結果のメッセージを大げさなくらい褒めるようにパワーアップ！ 🌟
       if (wrongQuestions.length > 0) {
-        title.innerText = "🎉 がんばったね！ 🎉";
-        message.innerText = `あやふやなもんだいが ${wrongQuestions.length}問 あったよ！`;
+        title.innerHTML = "🎉 がんばったね！ 🎉";
+        message.innerHTML = `あやふやなもんだいが ${wrongQuestions.length}問 あったよ！<br>つぎはもっとできる！✨`;
         retryBtn.style.display = 'inline-block'; 
       } else {
-        title.innerText = "🎉 がんばったね！えらい！ 🎉";
-        message.innerText = "✨ ぜんもんせいかい！パーフェクト！ ✨";
+        playSound('perfect'); // 🌟 全問正解の特別ファンファーレ！ 🌟
+        title.innerHTML = "🌟🏆 パーフェクト！<br>すばらしい！ 🏆🌟";
+        message.innerHTML = "✨ 天才！ ぜんもんせいかい！<br>さすがだね！ ✨";
         retryBtn.style.display = 'none'; 
       }
 

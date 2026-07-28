@@ -45,12 +45,12 @@
       display: flex;
     }
 
-    /* 4つのモード選択ボタン */
+    /* モード選択ボタン */
     .mode-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       width: 95%; 
       max-width: 360px; 
     }
@@ -65,7 +65,6 @@
       cursor: pointer;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       transition: all 0.2s ease;
-      white-space: nowrap;
       touch-action: manipulation;
     }
     .mode-btn.active {
@@ -74,6 +73,19 @@
       color: #0072B2;
       box-shadow: 0 2px 6px rgba(0,114,178,0.2);
     }
+    
+    /* よく間違える問題ボタン（幅広） */
+    .weak-btn {
+      grid-column: span 2;
+      background-color: #fff9e6;
+      border: 2px solid #E69F00;
+      color: #D55E00;
+    }
+    .weak-btn.active {
+      background-color: #ffe8aa;
+      border: 2px solid #D55E00;
+      color: #D55E00;
+    }
 
     .record-box {
       background: white;
@@ -81,14 +93,28 @@
       padding: 15px;
       width: 80%;
       max-width: 300px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       border: 2px solid #dddddd;
       font-size: 1.1rem;
       font-weight: bold;
+      position: relative;
     }
     .record-box div { margin: 5px 0; }
     .best-time { color: #D55E00; } 
     .last-time { color: #0072B2; }
+
+    /* リセットボタン */
+    .reset-btn {
+      background: #eeeeee;
+      border: 1px solid #cccccc;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      color: #555555;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+    }
 
     /* 上部バー */
     .top-bar {
@@ -197,15 +223,15 @@
 
     /* ボタン共通 */
     button.action-btn {
-      font-size: 1.3rem; padding: 15px 30px; border: none; border-radius: 30px;
+      font-size: 1.2rem; padding: 15px 20px; border: none; border-radius: 30px;
       font-weight: bold; cursor: pointer; touch-action: manipulation; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      width: auto; min-width: 200px; max-width: 320px; margin-bottom: 10px;
-      white-space: nowrap;
+      width: 90%; max-width: 320px; margin-bottom: 10px;
+      white-space: normal; /* 🌟 Safariでの見切れを防ぐため、自然に折り返すように変更！ 🌟 */
+      line-height: 1.4;
     }
-    .btn-start { background-color: #009E73; color: white; font-size: 1.5rem; width: 85%; }
+    .btn-start { background-color: #009E73; color: white; font-size: 1.4rem; }
     .btn-next { background-color: #E69F00; color: #222222; display: none; }
-    /* 🌟 文字を短くしたので、少し文字を大きくしてタップしやすくしました 🌟 */
-    .btn-retry { background-color: #CC79A7; color: white; font-size: 1.3rem; }
+    .btn-retry { background-color: #CC79A7; color: white; }
 
     /* アニメーション */
     @keyframes popIn {
@@ -242,6 +268,8 @@
       <button class="mode-btn" id="btn-add2" onclick="selectMode('add2')">たしざん2</button>
       <button class="mode-btn" id="btn-sub1" onclick="selectMode('sub1')">ひきざん1</button>
       <button class="mode-btn" id="btn-sub2" onclick="selectMode('sub2')">ひきざん2</button>
+      <!-- 🌟 新しいボタン！よく間違える問題 🌟 -->
+      <button class="mode-btn weak-btn" id="btn-weak" onclick="selectMode('weak')">にがてなもんだい（0問）</button>
     </div>
     
     <input type="hidden" id="mode" value="add1">
@@ -249,6 +277,8 @@
     <div class="record-box">
       <div class="best-time">👑 ベストタイム: <span id="best-time-display">--:--</span></div>
       <div class="last-time">🕒 ぜんかい: <span id="last-time-display">--:--</span></div>
+      <!-- 🌟 リセットボタン 🌟 -->
+      <button class="reset-btn" onclick="resetRecord()">🔄 記録をリセット</button>
     </div>
 
     <button class="action-btn btn-start" onclick="startGame()">よーい、スタート！</button>
@@ -285,8 +315,7 @@
       <div class="result-time" id="final-time">00:00</div>
       <div class="result-message" id="result-message"></div>
       
-      <!-- 🌟 ボタンの文字を短く元気な言葉に変更しました！ 🌟 -->
-      <button id="retry-btn" class="action-btn btn-retry" onclick="startRetry()" style="display: none;">もういちど ちょうせん！</button>
+      <button id="retry-btn" class="action-btn btn-retry" onclick="startRetry()" style="display: none;">もう１回 ちょうせん！</button>
       <br>
       <button class="action-btn btn-start" onclick="goToStart()">↩️ さいしょにもどる</button>
     </div>
@@ -322,8 +351,31 @@
       updateRecordsDisplay();
     }
 
+    // 🌟 ベストタイムをリセットする機能 🌟
+    function resetRecord() {
+      const mode = document.getElementById('mode').value;
+      if (mode === 'weak') {
+        alert("『にがてなもんだい』は、1回で正解するとリストから消えていくよ！✨");
+        return;
+      }
+      localStorage.removeItem(`bestTime_${mode}`);
+      localStorage.removeItem(`lastTime_${mode}`);
+      updateRecordsDisplay();
+    }
+
     function updateRecordsDisplay() {
       const mode = document.getElementById('mode').value;
+      
+      // にがてな問題の数をボタンに表示
+      const weakQ = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
+      document.getElementById('btn-weak').innerText = `にがてなもんだい（${weakQ.length}問）`;
+
+      if (mode === 'weak') {
+        document.getElementById('best-time-display').innerText = '--:--';
+        document.getElementById('last-time-display').innerText = '--:--';
+        return;
+      }
+
       const best = localStorage.getItem(`bestTime_${mode}`);
       const last = localStorage.getItem(`lastTime_${mode}`);
       document.getElementById('best-time-display').innerText = best ? formatTime(best) : '--:--';
@@ -353,6 +405,18 @@
       allQuestions = [];
       const mode = document.getElementById('mode').value;
       
+      // 🌟 にがてな問題モードの処理 🌟
+      if (mode === 'weak') {
+        allQuestions = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
+        if (allQuestions.length === 0) {
+          alert("にがてなもんだいは まだないよ！💮 はなまるです！");
+          selectMode('add1');
+          return false; // スタートしない
+        }
+        allQuestions.sort(() => Math.random() - 0.5);
+        return true;
+      }
+
       if (mode === 'add1') {
         for (let i = 1; i <= 9; i++) {
           for (let j = 1; j <= 9; j++) {
@@ -382,13 +446,16 @@
       }
 
       allQuestions.sort(() => Math.random() - 0.5);
+      return true;
     }
 
     function startGame() {
       playMode = 'normal';
       wrongQuestions = [];
-      generateAllQuestions();
-      startSequence();
+      const canStart = generateAllQuestions();
+      if (canStart) {
+        startSequence();
+      }
     }
 
     function startRetry() {
@@ -432,7 +499,11 @@
       const mode = document.getElementById('mode').value;
       const q = allQuestions[currentQuestionNum - 1];
 
-      let startNum = (mode === 'add2') ? 11 : 1;
+      // 答えの範囲を自動判定して10個のボタンを作る
+      let startNum = 1;
+      if (q.ans >= 11) {
+        startNum = 11;
+      }
 
       for (let i = 0; i < 10; i++) {
         const num = startNum + i;
@@ -448,6 +519,8 @@
       if (isAnswered) return; 
 
       const batsu = document.getElementById('batsu-mark');
+      const q = allQuestions[currentQuestionNum - 1];
+      const mode = document.getElementById('mode').value;
 
       if (selectedNumber === correctAnswer) {
         isAnswered = true;
@@ -459,13 +532,31 @@
         document.querySelectorAll('.choice-btn').forEach(b => {
           if (b !== btn) b.classList.add('wrong');
         });
+
+        // 🌟 にがてモードで1発正解したら、リストから消してあげる！ 🌟
+        if (mode === 'weak' && isFirstAttempt) {
+          let weakQ = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
+          weakQ = weakQ.filter(w => w.qStr !== q.qStr);
+          localStorage.setItem('weakQuestions', JSON.stringify(weakQ));
+        }
+
       } else {
         batsu.classList.add('show');
         setTimeout(() => { batsu.classList.remove('show'); }, 500);
 
         if (isFirstAttempt) {
-          wrongQuestions.push(allQuestions[currentQuestionNum - 1]);
+          wrongQuestions.push(q);
           isFirstAttempt = false;
+          
+          // 🌟 1回目で間違えたら、にがてリストに保存する 🌟
+          if (mode !== 'weak') {
+            let weakQ = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
+            // すでにリストに入っていなければ追加
+            if (!weakQ.some(w => w.qStr === q.qStr)) {
+              weakQ.push(q);
+              localStorage.setItem('weakQuestions', JSON.stringify(weakQ));
+            }
+          }
         }
         btn.classList.add('wrong');
         btn.style.transform = 'translateX(-5px)';
@@ -502,7 +593,8 @@
       document.getElementById('final-time').innerText = formatTime(timeTaken);
       badge.style.display = 'none';
 
-      if (playMode === 'normal') {
+      // にがてモードの時は記録を保存しない
+      if (playMode === 'normal' && mode !== 'weak') {
         const best = localStorage.getItem(`bestTime_${mode}`);
         localStorage.setItem(`lastTime_${mode}`, timeTaken);
         

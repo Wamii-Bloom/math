@@ -11,7 +11,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon.PNG">
 
-  <!-- 🌟 Googleの絵文字ウェブフォントを読み込む設定を追加しました！ 🌟 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
@@ -19,7 +18,6 @@
   <style>
     /* 全体のデザイン */
     body {
-      /* 🌟 Noto Color Emoji を追加して、絵文字デザインを統一しました！ 🌟 */
       font-family: 'Hiragino Maru Gothic ProN', 'Rounded M+ 1c', sans-serif, 'Noto Color Emoji';
       background-color: #f7f7f7;
       color: #222222;
@@ -61,7 +59,7 @@
       max-width: 360px; 
     }
     .mode-btn {
-      font-family: inherit; /* フォントを引き継ぐ設定 */
+      font-family: inherit;
       background-color: white;
       border: 2px solid #cccccc;
       color: #555555;
@@ -81,7 +79,7 @@
       box-shadow: 0 2px 6px rgba(0,114,178,0.2);
     }
     
-    /* よく間違える問題ボタン（幅広） */
+    /* よく間違える問題ボタン */
     .weak-btn {
       grid-column: span 2;
       background-color: #fff9e6;
@@ -94,34 +92,32 @@
       color: #D55E00;
     }
 
+    /* 🌟 記録の表示を控えめに、スッキリさせました 🌟 */
     .record-box {
-      background: white;
-      border-radius: 15px;
-      padding: 15px;
-      width: 80%;
+      background: transparent;
+      border: none;
+      padding: 5px;
+      width: 90%;
       max-width: 300px;
-      margin-bottom: 15px;
-      border: 2px solid #dddddd;
-      font-size: 1.1rem;
-      font-weight: bold;
+      margin-bottom: 25px; /* スタートボタンとの間隔をあけて中央感をアップ */
+      font-size: 0.9rem; /* 文字を少し小さく */
       position: relative;
     }
-    .record-box div { margin: 5px 0; }
-    .best-time { color: #D55E00; } 
-    .last-time { color: #0072B2; }
+    .record-box div { margin: 3px 0; }
+    .best-time { color: #666666; } 
+    .last-time { color: #888888; }
 
-    /* リセットボタン */
+    /* 🌟 リセットボタンも目立ちすぎない優しいデザインに 🌟 */
     .reset-btn {
       font-family: inherit;
-      background: #eeeeee;
+      background: transparent;
       border: 1px solid #cccccc;
-      border-radius: 8px;
-      padding: 5px 10px;
+      border-radius: 20px;
+      padding: 4px 12px;
       font-size: 0.8rem;
-      color: #555555;
+      color: #999999;
       cursor: pointer;
-      margin-top: 10px;
-      font-weight: bold;
+      margin-top: 8px;
     }
 
     /* 上部バー */
@@ -241,7 +237,13 @@
       white-space: normal;
       line-height: 1.4;
     }
-    .btn-start { background-color: #009E73; color: white; font-size: 1.4rem; }
+    /* 🌟 スタートボタンの存在感をアップ！ 🌟 */
+    .btn-start { 
+      background-color: #009E73; 
+      color: white; 
+      font-size: 1.5rem; 
+      padding: 18px 20px;
+    }
     .btn-next { background-color: #E69F00; color: #222222; display: none; }
     .btn-retry { background-color: #CC79A7; color: white; }
 
@@ -285,12 +287,14 @@
     
     <input type="hidden" id="mode" value="add1">
 
+    <!-- 🌟 背景の枠をなくして、文字色を落ち着かせました 🌟 -->
     <div class="record-box">
       <div class="best-time">👑 ベストタイム: <span id="best-time-display">--:--</span></div>
       <div class="last-time">🕒 ぜんかい: <span id="last-time-display">--:--</span></div>
       <button class="reset-btn" onclick="resetRecord()">🔄 記録をリセット</button>
     </div>
 
+    <!-- 🌟 ドンッと中央で目立つスタートボタン 🌟 -->
     <button class="action-btn btn-start" onclick="startGame()">よーい、スタート！</button>
   </div>
 

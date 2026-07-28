@@ -45,21 +45,21 @@
       display: flex;
     }
 
-    /* 🌟 4つのモード選択ボタン（Safari対応で幅を広げました） 🌟 */
+    /* 4つのモード選択ボタン */
     .mode-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 20px;
-      width: 95%; /* 枠を広げました */
-      max-width: 360px; /* スマホでの最大幅を大きくしました */
+      width: 95%; 
+      max-width: 360px; 
     }
     .mode-btn {
       background-color: white;
       border: 2px solid #cccccc;
       color: #555555;
-      font-size: 1rem; /* Safariで見切れないように文字サイズを微調整 */
-      padding: 12px 2px; /* 横の余白を減らして文字のスペースを確保 */
+      font-size: 1rem; 
+      padding: 12px 2px; 
       border-radius: 12px;
       font-weight: bold;
       cursor: pointer;
@@ -204,7 +204,8 @@
     }
     .btn-start { background-color: #009E73; color: white; font-size: 1.5rem; width: 85%; }
     .btn-next { background-color: #E69F00; color: #222222; display: none; }
-    .btn-retry { background-color: #CC79A7; color: white; font-size: 1.1rem; }
+    /* 🌟 文字を短くしたので、少し文字を大きくしてタップしやすくしました 🌟 */
+    .btn-retry { background-color: #CC79A7; color: white; font-size: 1.3rem; }
 
     /* アニメーション */
     @keyframes popIn {
@@ -284,7 +285,8 @@
       <div class="result-time" id="final-time">00:00</div>
       <div class="result-message" id="result-message"></div>
       
-      <button id="retry-btn" class="action-btn btn-retry" onclick="startRetry()" style="display: none;">もう一度まちがえた問題にチャレンジ</button>
+      <!-- 🌟 ボタンの文字を短く元気な言葉に変更しました！ 🌟 -->
+      <button id="retry-btn" class="action-btn btn-retry" onclick="startRetry()" style="display: none;">もういちど ちょうせん！</button>
       <br>
       <button class="action-btn btn-start" onclick="goToStart()">↩️ さいしょにもどる</button>
     </div>

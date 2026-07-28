@@ -9,7 +9,6 @@
   <meta name="theme-color" content="#f7f7f7">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- 🌟 アイコンのファイル名を大文字の「icon.PNG」に修正しました！ 🌟 -->
   <link rel="apple-touch-icon" href="icon.PNG">
 
   <style>
@@ -46,21 +45,21 @@
       display: flex;
     }
 
-    /* 4つのモード選択ボタン */
+    /* 🌟 4つのモード選択ボタン（Safari対応で幅を広げました） 🌟 */
     .mode-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 20px;
-      width: 90%;
-      max-width: 320px;
+      width: 95%; /* 枠を広げました */
+      max-width: 360px; /* スマホでの最大幅を大きくしました */
     }
     .mode-btn {
       background-color: white;
       border: 2px solid #cccccc;
       color: #555555;
-      font-size: 1.1rem;
-      padding: 12px 5px;
+      font-size: 1rem; /* Safariで見切れないように文字サイズを微調整 */
+      padding: 12px 2px; /* 横の余白を減らして文字のスペースを確保 */
       border-radius: 12px;
       font-weight: bold;
       cursor: pointer;

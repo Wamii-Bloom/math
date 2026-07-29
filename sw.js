@@ -6,7 +6,6 @@ const urlsToCache = [
   './icon.PNG'
 ];
 
-// インストール時にキャッシュを保存
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
@@ -16,7 +15,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// 古いキャッシュを綺麗にお掃除
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -32,19 +30,16 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// 常に最新版をチェックする仕組み（Network First）
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // 通信できたら最新版を返しつつ、キャッシュも最新に更新
         return caches.open(CACHE_NAME).then((cache) => {
           cache.put(event.request, response.clone());
           return response;
         });
       })
       .catch(() => {
-        // オフラインの時や通信エラーの時はキャッシュを返す
         return caches.match(event.request);
       })
   );

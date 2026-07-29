@@ -16,7 +16,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
 
   <style>
-    /* 全体のデザイン */
+    /* =========================================
+       全体・共通デザイン
+       ========================================= */
     body {
       font-family: 'Hiragino Maru Gothic ProN', 'Rounded M+ 1c', sans-serif, 'Noto Color Emoji';
       background-color: #f7f7f7;
@@ -32,141 +34,111 @@
       box-sizing: border-box;
       overflow: hidden;
     }
-    
-    h1 {
-      font-size: 1.8rem;
-      color: #222222;
+    h1 { font-size: 1.8rem; color: #222222; margin-bottom: 10px; margin-top: 5px; }
+    .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
+    .screen.active { display: flex; }
+
+    /* =========================================
+       スタート画面のUI
+       ========================================= */
+    /* 上部の設定エリア（音と問題数） */
+    .settings-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: 360px;
       margin-bottom: 15px;
     }
-
-    .screen {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
+    .sound-toggle {
+      background: white; border: 2px solid #cccccc; border-radius: 50%;
+      width: 45px; height: 45px; font-size: 1.5rem; cursor: pointer;
+      display: flex; justify-content: center; align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .screen.active {
-      display: flex;
+    .q-count-select {
+      font-size: 1rem; padding: 8px 15px; border-radius: 20px;
+      border: 2px solid #cccccc; background-color: white; font-weight: bold;
+      color: #555555; outline: none;
     }
 
     /* モード選択ボタン */
     .mode-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-      width: 95%; 
-      max-width: 360px; 
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      margin-bottom: 15px; width: 95%; max-width: 360px; 
     }
     .mode-btn {
-      font-family: inherit;
-      background-color: white;
-      border: 2px solid #cccccc;
-      color: #555555;
-      font-size: 1rem; 
-      padding: 12px 2px; 
-      border-radius: 12px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      transition: all 0.2s ease;
-      touch-action: manipulation;
+      font-family: inherit; background-color: white; border: 2px solid #cccccc;
+      color: #555555; font-size: 1rem; padding: 12px 2px; border-radius: 12px;
+      font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.2s ease; touch-action: manipulation;
     }
     .mode-btn.active {
-      border: 2px solid #0072B2;
-      background-color: #e6f2f8;
-      color: #0072B2;
-      box-shadow: 0 2px 6px rgba(0,114,178,0.2);
+      border: 2px solid #0072B2; background-color: #e6f2f8;
+      color: #0072B2; box-shadow: 0 2px 6px rgba(0,114,178,0.2);
     }
     
+    /* 🌟 にがてなもんだいボタン（目立つようにデザイン強化！） 🌟 */
     .weak-btn {
       grid-column: span 2;
       background-color: #fff9e6;
-      border: 2px solid #E69F00;
+      border: 2px dashed #E69F00; /* 点線にして特別感！ */
       color: #D55E00;
-    }
-    .weak-btn.active {
-      background-color: #ffe8aa;
-      border: 2px solid #D55E00;
-      color: #D55E00;
-    }
-
-    .record-box {
-      background: transparent;
-      border: none;
-      padding: 5px;
-      width: 90%;
-      max-width: 300px;
-      margin-bottom: 25px;
-      font-size: 0.9rem;
-      position: relative;
-    }
-    .record-box div { margin: 3px 0; }
-    .best-time { color: #666666; } 
-    .last-time { color: #888888; }
-
-    .reset-btn {
-      font-family: inherit;
-      background: transparent;
-      border: 1px solid #cccccc;
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 0.8rem;
-      color: #999999;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    /* 上部バー */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 95%;
-      max-width: 340px;
-      margin-bottom: 15px;
-    }
-    .back-btn {
-      font-family: inherit;
-      background: white;
-      border: 2px solid #555555;
-      border-radius: 50%;
-      width: 45px;
-      height: 45px;
-      font-size: 1.5rem;
-      color: #222222;
-      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 15px 5px;
       display: flex;
       justify-content: center;
       align-items: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      flex-shrink: 0;
+      gap: 10px;
+    }
+    .weak-btn.active {
+      background-color: #ffe8aa; border: 2px solid #D55E00; color: #D55E00;
+    }
+    .weak-badge {
+      background: #D55E00; color: white; border-radius: 20px;
+      padding: 2px 10px; font-size: 0.9rem; font-weight: bold;
+    }
+
+    /* 記録表示 */
+    .record-box {
+      background: transparent; border: none; padding: 5px;
+      width: 90%; max-width: 300px; margin-bottom: 20px;
+      font-size: 0.9rem; position: relative;
+    }
+    .record-box div { margin: 3px 0; }
+    .best-time { color: #666666; font-weight: bold;} 
+    .last-time { color: #888888; font-weight: bold;}
+    .reset-btn {
+      font-family: inherit; background: transparent; border: 1px solid #cccccc;
+      border-radius: 20px; padding: 4px 12px; font-size: 0.8rem;
+      color: #999999; cursor: pointer; margin-top: 8px;
+    }
+
+    /* =========================================
+       プレイ画面のUI
+       ========================================= */
+    .top-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      width: 95%; max-width: 340px; margin-bottom: 15px;
+    }
+    .back-btn {
+      font-family: inherit; background: white; border: 2px solid #555555;
+      border-radius: 50%; width: 45px; height: 45px; font-size: 1.5rem;
+      color: #222222; cursor: pointer; display: flex; justify-content: center;
+      align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0;
     }
     .timer-display, .progress {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #222222;
-      background: white;
-      padding: 5px 10px;
-      border-radius: 20px;
-      border: 2px solid #dddddd;
+      font-size: 1.1rem; font-weight: bold; color: #222222; background: white;
+      padding: 5px 10px; border-radius: 20px; border: 2px solid #dddddd;
     }
     .timer-display { color: #D55E00; }
 
     /* 計算カード本体 */
     .flashcard {
-      position: relative;
-      background-color: #ffffff;
-      border: 2px solid #cccccc;
-      border-radius: 15px;
-      width: 85%;
-      max-width: 320px;
-      height: 150px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 3px 5px 15px rgba(0,0,0,0.1);
-      margin-bottom: 25px; /* ボタンを消した分、少し余白を広く */
+      position: relative; background-color: #ffffff; border: 2px solid #cccccc;
+      border-radius: 15px; width: 85%; max-width: 320px; height: 150px;
+      display: flex; justify-content: center; align-items: center;
+      box-shadow: 3px 5px 15px rgba(0,0,0,0.1); margin-bottom: 25px;
     }
     .card-hole {
       position: absolute; top: 15px; left: 15px; width: 20px; height: 20px;
@@ -182,71 +154,47 @@
       font-size: 3.5rem; font-weight: bold; letter-spacing: 5px;
       color: #222222; z-index: 3;
     }
-    
-    /* ⭕️と❌のマーク */
     .maru-mark, .batsu-mark {
-      font-family: inherit;
-      position: absolute; font-size: 8rem; opacity: 0;
+      font-family: inherit; position: absolute; font-size: 8rem; opacity: 0;
       pointer-events: none; transition: opacity 0.2s ease-in-out; z-index: 4;
     }
     .maru-mark { color: #D55E00; }
     .batsu-mark { color: #0072B2; font-size: 7rem; }
     .maru-mark.show, .batsu-mark.show { opacity: 0.7; }
 
-    /* 選択肢のレイアウト */
+    /* 選択肢ボタン */
     .choices-container {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      width: 95%;
-      max-width: 340px;
-      margin-bottom: 15px;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+      width: 95%; max-width: 340px; margin-bottom: 15px;
     }
     .choice-btn {
-      font-family: inherit;
-      background-color: #0072B2;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      touch-action: manipulation;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 55px; 
-      font-size: 1.6rem;
+      font-family: inherit; background-color: #0072B2; color: white;
+      font-weight: bold; border: none; border-radius: 10px; cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2); touch-action: manipulation;
+      display: flex; justify-content: center; align-items: center;
+      height: 55px; font-size: 1.6rem;
     }
-    
     .choice-btn:active { transform: scale(0.95); }
     .choice-btn.wrong { background-color: #cccccc; color: #777777; box-shadow: none; }
     .choice-btn.correct { background-color: #D55E00; }
 
-    /* ボタン共通 */
+    /* =========================================
+       ボタン共通・結果画面・アニメーション
+       ========================================= */
     button.action-btn {
-      font-family: inherit;
-      font-size: 1.2rem; padding: 15px 20px; border: none; border-radius: 30px;
-      font-weight: bold; cursor: pointer; touch-action: manipulation; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      width: 90%; max-width: 320px; margin-bottom: 10px;
-      white-space: normal;
-      line-height: 1.4;
+      font-family: inherit; font-size: 1.2rem; padding: 15px 20px; border: none;
+      border-radius: 30px; font-weight: bold; cursor: pointer; touch-action: manipulation;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2); width: 90%; max-width: 320px;
+      margin-bottom: 10px; white-space: normal; line-height: 1.4;
     }
-    .btn-start { 
-      background-color: #009E73; 
-      color: white; 
-      font-size: 1.5rem; 
-      padding: 18px 20px;
-    }
+    .btn-start { background-color: #009E73; color: white; font-size: 1.5rem; padding: 18px 20px;}
     .btn-retry { background-color: #CC79A7; color: white; margin-top: 10px;}
 
-    /* アニメーションとすごい感の演出 */
     @keyframes popIn {
       0% { transform: scale(0.5); opacity: 0; }
       70% { transform: scale(1.1); opacity: 1; }
       100% { transform: scale(1); opacity: 1; }
     }
-    /* 🌟 新記録のときに色がカラフルに変わるアニメーション！ 🌟 */
     @keyframes rainbowPulse {
       0% { transform: scale(1); background-color: #F0E442; color: #222; }
       50% { transform: scale(1.05); background-color: #ffb3ba; color: #b20000; }
@@ -259,26 +207,39 @@
     .result-message { font-size: 1.3rem; margin-bottom: 20px; font-weight: bold; color: #0072B2; }
     
     .new-record { 
-      padding: 10px 20px; border-radius: 20px; 
-      font-size: 1.2rem; margin-bottom: 15px; display: none; font-weight: bold;
-      border: 3px solid #D55E00; animation: rainbowPulse 1s infinite;
+      padding: 10px 20px; border-radius: 20px; font-size: 1.2rem; margin-bottom: 15px; 
+      display: none; font-weight: bold; border: 3px solid #D55E00; animation: rainbowPulse 1s infinite;
     }
   </style>
 </head>
 <body>
 
-  <!-- スタート画面 -->
+  <!-- =========================================
+       1. スタート画面
+       ========================================= -->
   <div id="start-screen" class="screen active">
     <h1>けいさんカード</h1>
     
+    <!-- 音のON/OFFと問題数の設定 -->
+    <div class="settings-bar">
+      <button class="sound-toggle" id="sound-btn" onclick="toggleSound()">🔊</button>
+      <select class="q-count-select" id="q-count">
+        <option value="10">10もん</option>
+        <option value="20">20もん</option>
+        <option value="all" selected>ぜんぶ</option>
+      </select>
+    </div>
+    
+    <!-- モード選択 -->
     <div class="mode-buttons">
       <button class="mode-btn active" id="btn-add1" onclick="selectMode('add1')">たしざん1</button>
       <button class="mode-btn" id="btn-add2" onclick="selectMode('add2')">たしざん2</button>
       <button class="mode-btn" id="btn-sub1" onclick="selectMode('sub1')">ひきざん1</button>
       <button class="mode-btn" id="btn-sub2" onclick="selectMode('sub2')">ひきざん2</button>
-      <button class="mode-btn weak-btn" id="btn-weak" onclick="selectMode('weak')">にがてなもんだい（0問）</button>
+      <button class="mode-btn weak-btn" id="btn-weak" onclick="selectMode('weak')">
+        にがてなもんだい <span class="weak-badge" id="weak-badge">0</span>
+      </button>
     </div>
-    
     <input type="hidden" id="mode" value="add1">
 
     <div class="record-box">
@@ -290,7 +251,9 @@
     <button class="action-btn btn-start" onclick="startGame()">よーい、スタート！</button>
   </div>
 
-  <!-- プレイ画面 -->
+  <!-- =========================================
+       2. プレイ画面
+       ========================================= -->
   <div id="play-screen" class="screen">
     <div class="top-bar">
       <button class="back-btn" onclick="goToStart()">↩️</button>
@@ -307,15 +270,14 @@
     </div>
 
     <div id="choices-container" class="choices-container"></div>
-    
-    <!-- 🌟 つぎへボタンは自動で進むので削除しました！ 🌟 -->
   </div>
 
-  <!-- 結果画面 -->
+  <!-- =========================================
+       3. 結果画面
+       ========================================= -->
   <div id="result-screen" class="screen">
     <div id="result-content">
       <div class="result-title" id="result-title">🎉 がんばったね！ 🎉</div>
-      <!-- 🌟 新記録のテキストを大げさなくらい褒める言葉に変更！ 🌟 -->
       <div id="new-record-badge" class="new-record">🎉 ドドドドーン！ 新記録達成！<br>すごすぎる！ 🎉</div>
       <div class="result-time" id="final-time">00:00</div>
       <div class="result-message" id="result-message"></div>
@@ -325,25 +287,46 @@
     </div>
   </div>
 
+  <!-- =========================================
+       アプリのプログラム
+       ========================================= -->
   <script>
+    // -------------------------
+    // 初期設定・サービスワーカー
+    // -------------------------
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
+        // キャッシュ対策のため、更新のたびに新しいものを読み込むようにパラメータを付与
+        navigator.serviceWorker.register('./sw.js?v=' + new Date().getTime())
+          .catch(err => console.log('SW error:', err));
       });
     }
 
-    // 🌟 音を鳴らすための魔法（Web Audio API）の設定 🌟
+    // 状態を管理する変数
+    const AppState = {
+      allQuestions: [],
+      wrongQuestions: [],
+      currentQuestionNum: 1,
+      startTime: 0,
+      isAnswered: false,
+      isFirstAttempt: true,
+      playMode: 'normal',
+      timerInterval: null,
+      isSoundOn: true
+    };
+
+    // -------------------------
+    // 音の魔法（Web Audio API）
+    // -------------------------
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
 
     function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new AudioContext();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      // スマホの制限を解除するための無音再生
+      if (!AppState.isSoundOn) return;
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      // 無音再生でスマホの制限を解除
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       gain.gain.value = 0;
@@ -354,23 +337,22 @@
     }
 
     function playSound(type) {
-      if (!audioCtx) return;
+      if (!AppState.isSoundOn || !audioCtx) return;
+      
       const osc = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
       osc.connect(gainNode);
       gainNode.connect(audioCtx.destination);
 
       if (type === 'correct') {
-        // ピンポーン♪
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(880, audioCtx.currentTime); // 高い音
-        osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.1); // もっと高い音
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.1);
         gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
         osc.start(audioCtx.currentTime);
         osc.stop(audioCtx.currentTime + 0.4);
       } else if (type === 'wrong') {
-        // ブッブー
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(250, audioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.3);
@@ -379,12 +361,11 @@
         osc.start(audioCtx.currentTime);
         osc.stop(audioCtx.currentTime + 0.3);
       } else if (type === 'perfect') {
-        // チャラララーン♪（パーフェクト用ファンファーレ）
         osc.type = 'square';
-        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // ド
-        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15); // ミ
-        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.3); // ソ
-        osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.45); // 高いド
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15); 
+        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.3); 
+        osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.45); 
         gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
         osc.start(audioCtx.currentTime);
@@ -392,14 +373,23 @@
       }
     }
 
-    let allQuestions = [];
-    let wrongQuestions = [];
-    let currentQuestionNum = 1;
-    let startTime;
-    let isAnswered = false;
-    let isFirstAttempt = true;
-    let playMode = 'normal';
-    let timerInterval;
+    // -------------------------
+    // 画面や設定の切り替え機能
+    // -------------------------
+    function toggleSound() {
+      AppState.isSoundOn = !AppState.isSoundOn;
+      localStorage.setItem('soundPref', AppState.isSoundOn);
+      document.getElementById('sound-btn').innerText = AppState.isSoundOn ? '🔊' : '🔇';
+    }
+
+    function loadSettings() {
+      const savedSound = localStorage.getItem('soundPref');
+      if (savedSound !== null) {
+        AppState.isSoundOn = savedSound === 'true';
+        document.getElementById('sound-btn').innerText = AppState.isSoundOn ? '🔊' : '🔇';
+      }
+      updateRecordsDisplay();
+    }
 
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -408,9 +398,7 @@
 
     function selectMode(selectedMode) {
       document.getElementById('mode').value = selectedMode;
-      document.querySelectorAll('.mode-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
       document.getElementById('btn-' + selectedMode).classList.add('active');
       updateRecordsDisplay();
     }
@@ -429,8 +417,9 @@
     function updateRecordsDisplay() {
       const mode = document.getElementById('mode').value;
       
+      // 苦手問題の数をバッジに反映
       const weakQ = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
-      document.getElementById('btn-weak').innerText = `にがてなもんだい（${weakQ.length}問）`;
+      document.getElementById('weak-badge').innerText = weakQ.length;
 
       if (mode === 'weak') {
         document.getElementById('best-time-display').innerText = '--:--';
@@ -453,88 +442,98 @@
 
     function updateTimerDisplay() {
       const now = Date.now();
-      const ms = now - startTime;
+      const ms = now - AppState.startTime;
       document.getElementById('current-time').innerText = formatTime(ms);
     }
 
     function goToStart() {
-      clearInterval(timerInterval);
+      clearInterval(AppState.timerInterval);
       updateRecordsDisplay();
       showScreen('start-screen');
     }
 
+    // -------------------------
+    // 問題の生成とゲーム進行
+    // -------------------------
     function generateAllQuestions() {
-      allQuestions = [];
+      let questions = [];
       const mode = document.getElementById('mode').value;
+      const qCountSetting = document.getElementById('q-count').value;
       
       if (mode === 'weak') {
-        allQuestions = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
-        if (allQuestions.length === 0) {
+        questions = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
+        if (questions.length === 0) {
           alert("にがてなもんだいは まだないよ！💮 はなまるです！");
           selectMode('add1');
           return false;
         }
-        allQuestions.sort(() => Math.random() - 0.5);
-        return true;
-      }
-
-      if (mode === 'add1') {
-        for (let i = 1; i <= 9; i++) {
+      } else {
+        if (mode === 'add1') {
+          for (let i = 1; i <= 9; i++) {
+            for (let j = 1; j <= 9; j++) {
+              if (i + j <= 10) questions.push({ qStr: `${i} + ${j}`, ans: i + j });
+            }
+          }
+        } else if (mode === 'add2') {
+          for (let i = 2; i <= 9; i++) {
+            for (let j = 2; j <= 9; j++) {
+              if (i + j >= 11) questions.push({ qStr: `${i} + ${j}`, ans: i + j });
+            }
+          }
+        } else if (mode === 'sub1') {
           for (let j = 1; j <= 9; j++) {
-            if (i + j <= 10) allQuestions.push({ qStr: `${i} + ${j}`, ans: i + j });
+            for (let i = j + 1; i <= 10; i++) {
+              questions.push({ qStr: `${i} - ${j}`, ans: i - j });
+            }
           }
-        }
-      } else if (mode === 'add2') {
-        for (let i = 2; i <= 9; i++) {
+        } else if (mode === 'sub2') {
           for (let j = 2; j <= 9; j++) {
-            if (i + j >= 11) allQuestions.push({ qStr: `${i} + ${j}`, ans: i + j });
-          }
-        }
-      } else if (mode === 'sub1') {
-        for (let j = 1; j <= 9; j++) {
-          for (let i = j + 1; i <= 10; i++) {
-            allQuestions.push({ qStr: `${i} - ${j}`, ans: i - j });
-          }
-        }
-      } else if (mode === 'sub2') {
-        for (let j = 2; j <= 9; j++) {
-          for (let i = 11; i <= 18; i++) {
-            if (i - j >= 1 && i - j <= 9 && (i % 10 < j)) {
-              allQuestions.push({ qStr: `${i} - ${j}`, ans: i - j });
+            for (let i = 11; i <= 18; i++) {
+              if (i - j >= 1 && i - j <= 9 && (i % 10 < j)) {
+                questions.push({ qStr: `${i} - ${j}`, ans: i - j });
+              }
             }
           }
         }
       }
 
-      allQuestions.sort(() => Math.random() - 0.5);
+      // 毎回バラバラにシャッフル
+      questions.sort(() => Math.random() - 0.5);
+
+      // 問題数を絞る（ぜんぶ以外の場合）
+      if (qCountSetting !== 'all') {
+        const limit = parseInt(qCountSetting, 10);
+        questions = questions.slice(0, limit);
+      }
+
+      AppState.allQuestions = questions;
       return true;
     }
 
     function startGame() {
-      initAudio(); // 音を鳴らす準備をします！
-      playMode = 'normal';
-      wrongQuestions = [];
-      const canStart = generateAllQuestions();
-      if (canStart) {
+      initAudio();
+      AppState.playMode = 'normal';
+      AppState.wrongQuestions = [];
+      if (generateAllQuestions()) {
         startSequence();
       }
     }
 
     function startRetry() {
       initAudio(); 
-      playMode = 'retry';
-      allQuestions = [...wrongQuestions].sort(() => Math.random() - 0.5);
-      wrongQuestions = [];
+      AppState.playMode = 'retry';
+      AppState.allQuestions = [...AppState.wrongQuestions].sort(() => Math.random() - 0.5);
+      AppState.wrongQuestions = [];
       startSequence();
     }
 
     function startSequence() {
-      currentQuestionNum = 1;
-      startTime = Date.now();
-      document.getElementById('total-q').innerText = allQuestions.length;
+      AppState.currentQuestionNum = 1;
+      AppState.startTime = Date.now();
+      document.getElementById('total-q').innerText = AppState.allQuestions.length;
       
-      clearInterval(timerInterval);
-      timerInterval = setInterval(updateTimerDisplay, 1000);
+      clearInterval(AppState.timerInterval);
+      AppState.timerInterval = setInterval(updateTimerDisplay, 1000);
       updateTimerDisplay();
       
       showNextQuestion();
@@ -542,78 +541,73 @@
     }
 
     function showNextQuestion() {
-      isAnswered = false;
-      isFirstAttempt = true;
-      const q = allQuestions[currentQuestionNum - 1];
+      AppState.isAnswered = false;
+      AppState.isFirstAttempt = true;
+      const q = AppState.allQuestions[AppState.currentQuestionNum - 1];
       
       document.getElementById('question').innerText = q.qStr;
-      document.getElementById('current-q').innerText = currentQuestionNum;
+      document.getElementById('current-q').innerText = AppState.currentQuestionNum;
       
       document.getElementById('maru-mark').classList.remove('show');
       document.getElementById('batsu-mark').classList.remove('show');
 
-      createChoiceButtons();
+      createChoiceButtons(q);
     }
 
-    function createChoiceButtons() {
+    function createChoiceButtons(q) {
       const container = document.getElementById('choices-container');
       container.innerHTML = ''; 
-      const mode = document.getElementById('mode').value;
-      const q = allQuestions[currentQuestionNum - 1];
 
-      let startNum = 1;
-      if (q.ans >= 11) {
-        startNum = 11;
-      }
+      // 答えの範囲に応じてボタンの数字を自動設定
+      let startNum = (q.ans >= 11) ? 11 : 1;
 
       for (let i = 0; i < 10; i++) {
         const num = startNum + i;
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.innerText = num;
-        btn.onclick = () => handleChoice(btn, num, q.ans);
+        btn.onclick = () => handleChoice(btn, num, q);
         container.appendChild(btn);
       }
     }
 
-    function handleChoice(btn, selectedNumber, correctAnswer) {
-      if (isAnswered) return; 
+    function handleChoice(btn, selectedNumber, q) {
+      if (AppState.isAnswered) return; 
 
       const batsu = document.getElementById('batsu-mark');
-      const q = allQuestions[currentQuestionNum - 1];
       const mode = document.getElementById('mode').value;
 
-      if (selectedNumber === correctAnswer) {
-        isAnswered = true;
+      if (selectedNumber === q.ans) {
+        // 正解の処理
+        AppState.isAnswered = true;
         btn.classList.add('correct');
         document.getElementById('maru-mark').classList.add('show');
         batsu.classList.remove('show');
         
-        playSound('correct'); // 🌟 正解の音を鳴らす 🌟
+        playSound('correct');
 
         document.querySelectorAll('.choice-btn').forEach(b => {
           if (b !== btn) b.classList.add('wrong');
         });
 
-        if (mode === 'weak' && isFirstAttempt) {
+        // にがてモードで一発正解したらリストから消去
+        if (mode === 'weak' && AppState.isFirstAttempt) {
           let weakQ = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
           weakQ = weakQ.filter(w => w.qStr !== q.qStr);
           localStorage.setItem('weakQuestions', JSON.stringify(weakQ));
         }
 
-        // 🌟 0.8秒待ってから、自動で次の問題へ！ 🌟
-        setTimeout(() => {
-          goToNextQuestion();
-        }, 800);
+        setTimeout(() => goToNextQuestion(), 800);
 
       } else {
-        playSound('wrong'); // 🌟 間違いの音を鳴らす 🌟
+        // 不正解の処理
+        playSound('wrong');
         batsu.classList.add('show');
         setTimeout(() => { batsu.classList.remove('show'); }, 500);
 
-        if (isFirstAttempt) {
-          wrongQuestions.push(q);
-          isFirstAttempt = false;
+        if (AppState.isFirstAttempt) {
+          AppState.wrongQuestions.push(q);
+          AppState.isFirstAttempt = false;
           
           if (mode !== 'weak') {
             let weakQ = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
@@ -631,8 +625,8 @@
     }
 
     function goToNextQuestion() {
-      if (currentQuestionNum < allQuestions.length) {
-        currentQuestionNum++;
+      if (AppState.currentQuestionNum < AppState.allQuestions.length) {
+        AppState.currentQuestionNum++;
         showNextQuestion();
       } else {
         finishGame();
@@ -640,17 +634,18 @@
     }
 
     function finishGame() {
-      clearInterval(timerInterval);
+      clearInterval(AppState.timerInterval);
       
       const endTime = Date.now();
-      const timeTaken = endTime - startTime;
+      const timeTaken = endTime - AppState.startTime;
       const mode = document.getElementById('mode').value;
+      
       const badge = document.getElementById('new-record-badge');
       const title = document.getElementById('result-title');
       const message = document.getElementById('result-message');
       const retryBtn = document.getElementById('retry-btn');
-      
       const content = document.getElementById('result-content');
+      
       content.classList.remove('anime-active');
       void content.offsetWidth; 
       content.classList.add('anime-active');
@@ -658,7 +653,9 @@
       document.getElementById('final-time').innerText = formatTime(timeTaken);
       badge.style.display = 'none';
 
-      if (playMode === 'normal' && mode !== 'weak') {
+      // 記録の保存（問題数「ぜんぶ」の時だけ記録を保存する仕組みにしました！）
+      const qCountSetting = document.getElementById('q-count').value;
+      if (AppState.playMode === 'normal' && mode !== 'weak' && qCountSetting === 'all') {
         const best = localStorage.getItem(`bestTime_${mode}`);
         localStorage.setItem(`lastTime_${mode}`, timeTaken);
         
@@ -668,13 +665,12 @@
         }
       }
 
-      // 🌟 結果のメッセージを大げさなくらい褒めるようにパワーアップ！ 🌟
-      if (wrongQuestions.length > 0) {
+      if (AppState.wrongQuestions.length > 0) {
         title.innerHTML = "🎉 がんばったね！ 🎉";
-        message.innerHTML = `あやふやなもんだいが ${wrongQuestions.length}問 あったよ！<br>つぎはもっとできる！✨`;
+        message.innerHTML = `あやふやなもんだいが ${AppState.wrongQuestions.length}問 あったよ！<br>つぎはもっとできる！✨`;
         retryBtn.style.display = 'inline-block'; 
       } else {
-        playSound('perfect'); // 🌟 全問正解の特別ファンファーレ！ 🌟
+        playSound('perfect');
         title.innerHTML = "🌟🏆 パーフェクト！<br>すばらしい！ 🏆🌟";
         message.innerHTML = "✨ 天才！ ぜんもんせいかい！<br>さすがだね！ ✨";
         retryBtn.style.display = 'none'; 
@@ -683,7 +679,7 @@
       showScreen('result-screen');
     }
 
-    window.onload = updateRecordsDisplay;
+    window.onload = loadSettings;
   </script>
 </body>
 </html>

@@ -11,6 +11,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon.PNG">
 
+  <!-- Google Material Symbols の読み込み -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+
   <style>
     /* =========================================
        全体・共通デザイン
@@ -32,7 +35,7 @@
       overflow: hidden;
     }
     h1 { font-size: 1.8rem; color: #222222; margin-bottom: 10px; margin-top: 5px; }
-    .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
+    .screen { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; }
     .screen.active { display: flex; }
 
     /* =========================================
@@ -47,13 +50,22 @@
       margin-bottom: 15px;
     }
     
-    /* 🌟 音ボタン：「♪」だけでスッキリと！ 🌟 */
+    /* 🌟 音ボタン：Google Material Symbols を使用したスタイリッシュな丸ボタン 🌟 */
     .sound-toggle {
-      font-family: inherit; font-weight: bold;
-      border-radius: 50%; width: 42px; height: 42px; font-size: 1.2rem; cursor: pointer;
-      display: flex; justify-content: center; align-items: center;
+      font-family: 'Material Symbols Rounded';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      border-radius: 50%; 
+      width: 46px; 
+      height: 46px; 
+      cursor: pointer;
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       transition: all 0.2s ease;
+      outline: none;
     }
     .sound-toggle.on {
       background-color: #D55E00; 
@@ -70,13 +82,13 @@
       position: relative;
     }
     .q-count-select {
-      font-family: inherit; font-size: 1rem; padding: 6px 28px 6px 12px; 
+      font-family: inherit; font-size: 1rem; padding: 8px 30px 8px 14px; 
       border-radius: 20px; border: 2px solid #cccccc; background-color: white; 
       font-weight: bold; color: #555555; outline: none; appearance: none; 
       cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .q-count-wrapper::after {
-      content: '▼'; position: absolute; right: 10px; top: 50%;
+      content: '▼'; position: absolute; right: 12px; top: 50%;
       transform: translateY(-50%); pointer-events: none;
       font-size: 0.7rem; color: #555555;
     }
@@ -97,7 +109,7 @@
       color: #0072B2; box-shadow: 0 2px 6px rgba(0,114,178,0.2);
     }
     
-    /* 🌟 「にがてなもんだい」ボタン：他のボタンと統一感を持たせた5つ目のモードに！ 🌟 */
+    /* 🌟 「にがて」ボタン：シンプルでスッキリしたデザインに！ 🌟 */
     .weak-btn {
       grid-column: span 2; 
       background-color: white; 
@@ -111,7 +123,7 @@
       gap: 8px;
     }
     .weak-btn.active {
-      background-color: #fff4e6; 
+      background-color: #fff8eb; 
       border: 2px solid #E69F00; 
       color: #D55E00;
       box-shadow: 0 2px 6px rgba(230,159,0,0.2);
@@ -120,8 +132,8 @@
       background: #dddddd; 
       color: #555555; 
       border-radius: 10px;
-      padding: 1px 7px; 
-      font-size: 0.8rem; 
+      padding: 1px 6px; 
+      font-size: 0.75rem; 
       font-weight: bold;
     }
     .weak-btn.active .weak-badge {
@@ -132,14 +144,14 @@
     .record-box {
       background: transparent; border: none; padding: 5px;
       width: 90%; max-width: 300px; margin-bottom: 20px;
-      font-size: 1rem; position: relative;
+      font-size: 0.95rem; position: relative;
     }
-    .record-box div { margin: 4px 0; }
+    .record-box div { margin: 5px 0; }
     .best-time { color: #666666; } 
     .last-time { color: #888888; }
     .reset-btn {
       font-family: inherit; background: transparent; border: 1px solid #cccccc;
-      border-radius: 20px; padding: 4px 12px; font-size: 0.8rem; font-weight: bold;
+      border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; font-weight: bold;
       color: #999999; cursor: pointer; margin-top: 8px;
     }
 
@@ -153,13 +165,13 @@
     
     .back-btn {
       font-family: inherit; background: white; border: 2px solid #555555;
-      border-radius: 20px; padding: 6px 14px; font-size: 1.1rem; font-weight: bold;
+      border-radius: 20px; padding: 6px 14px; font-size: 1rem; font-weight: bold;
       color: #222222; cursor: pointer; display: flex; justify-content: center;
       align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0;
     }
     
     .timer-display, .progress {
-      font-size: 1.2rem; color: #222222; background: white;
+      font-size: 1.1rem; color: #222222; background: white;
       padding: 5px 15px; border-radius: 20px; border: 2px solid #dddddd;
     }
     .timer-display { color: #D55E00; }
@@ -209,12 +221,12 @@
        ボタン共通・結果画面・アニメーション
        ========================================= */
     button.action-btn {
-      font-family: inherit; font-size: 1.3rem; padding: 15px 20px; border: none;
+      font-family: inherit; font-size: 1.2rem; padding: 14px 20px; border: none;
       border-radius: 30px; font-weight: bold; cursor: pointer; touch-action: manipulation;
       box-shadow: 0 4px 6px rgba(0,0,0,0.2); width: 90%; max-width: 320px;
       margin-bottom: 10px; white-space: normal; line-height: 1.4;
     }
-    .btn-start { background-color: #009E73; color: white; font-size: 1.6rem; padding: 18px 20px;}
+    .btn-start { background-color: #009E73; color: white; font-size: 1.5rem; padding: 16px 20px;}
     .btn-retry { background-color: #CC79A7; color: white; margin-top: 10px;}
 
     @keyframes popIn {
@@ -229,13 +241,24 @@
     }
     .anime-active { animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     
-    .result-title { font-size: 1.8rem; color: #222222; margin-bottom: 15px; line-height: 1.3;}
-    .result-time { font-size: 3rem; color: #D55E00; margin-bottom: 20px; }
-    .result-message { font-size: 1.3rem; margin-bottom: 20px; color: #0072B2; }
+    .result-title { font-size: 1.7rem; color: #222222; margin-bottom: 12px; line-height: 1.4;}
+    .result-time { font-size: 2.8rem; color: #D55E00; margin-bottom: 15px; }
+    .result-message { font-size: 1.2rem; margin-bottom: 20px; color: #0072B2; line-height: 1.4; }
     
     .new-record { 
-      padding: 12px 20px; border-radius: 20px; font-size: 1.3rem; margin-bottom: 15px; 
+      padding: 10px 18px; border-radius: 20px; font-size: 1.1rem; margin-bottom: 15px; 
       display: none; border: 3px solid #D55E00; animation: rainbowPulse 1s infinite;
+    }
+
+    /* 🌟 上品な紙吹雪用 Canvas 🌟 */
+    #confetti-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
     }
   </style>
 </head>
@@ -248,8 +271,8 @@
     <h1>けいさんカード</h1>
     
     <div class="settings-bar">
-      <!-- 🌟 音ボタン：「♪」だけにシンプル化 🌟 -->
-      <button id="sound-btn" class="sound-toggle on" onclick="toggleSound()">♪</button>
+      <!-- 🌟 音ボタン：Google Material Symbols アイコンのみ 🌟 -->
+      <button id="sound-btn" class="sound-toggle on" onclick="toggleSound()">volume_up</button>
       <div class="q-count-wrapper">
         <select class="q-count-select" id="q-count">
           <option value="10">10もん</option>
@@ -264,9 +287,9 @@
       <button class="mode-btn" id="btn-add2" onclick="selectMode('add2')">たしざん2</button>
       <button class="mode-btn" id="btn-sub1" onclick="selectMode('sub1')">ひきざん1</button>
       <button class="mode-btn" id="btn-sub2" onclick="selectMode('sub2')">ひきざん2</button>
-      <!-- 🌟 にがてなもんだいボタン：他のモードボタンと完全一致したデザインに 🌟 -->
+      <!-- 🌟 「にがて」ボタン：鉛筆アイコン付きのスマートな5つ目のモード 🌟 -->
       <button class="mode-btn weak-btn" id="btn-weak" onclick="selectMode('weak')">
-        にがてなもんだい <span class="weak-badge" id="weak-badge">0</span>
+        ✏️ にがて <span class="weak-badge" id="weak-badge">0</span>
       </button>
     </div>
     <input type="hidden" id="mode" value="add1">
@@ -305,8 +328,12 @@
        3. 結果画面
        ========================================= -->
   <div id="result-screen" class="screen">
-    <div id="result-content">
+    <!-- 上品な紙吹雪を描画するキャンバス -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <div id="result-content" style="z-index: 11; position: relative;">
       <div class="result-title" id="result-title">がんばったね！</div>
+      <!-- 🌟 新記録のときだけ 🎉 を表示するバッジ 🌟 -->
       <div id="new-record-badge" class="new-record">🎉 ドドドドーン！ 新記録達成！<br>すごすぎる！ 🎉</div>
       <div class="result-time" id="final-time">00:00</div>
       <div class="result-message" id="result-message"></div>
@@ -394,13 +421,14 @@
       }
     }
 
+    // 🌟 音ボタンのアイコン切り替え（Material Symbols） 🌟
     function updateSoundUI() {
       const btn = document.getElementById('sound-btn');
       if (AppState.isSoundOn) {
-        btn.innerText = '♪';
+        btn.innerText = 'volume_up';
         btn.className = 'sound-toggle on';
       } else {
-        btn.innerText = '♪';
+        btn.innerText = 'volume_off';
         btn.className = 'sound-toggle off';
       }
     }
@@ -435,7 +463,7 @@
     function resetRecord() {
       const mode = document.getElementById('mode').value;
       if (mode === 'weak') {
-        alert("『にがてなもんだい』は、1回で正解するとリストから消えていくよ！");
+        alert("『にがて』モードは、1回で正解するとリストから消えていくよ！");
         return;
       }
       localStorage.removeItem(`bestTime_${mode}`);
@@ -476,6 +504,7 @@
 
     function goToStart() {
       clearInterval(AppState.timerInterval);
+      stopConfetti();
       updateRecordsDisplay();
       showScreen('start-screen');
     }
@@ -689,12 +718,93 @@
         retryBtn.style.display = 'inline-block'; 
       } else {
         playSound('perfect');
-        title.innerHTML = "パーフェクト！<br>すばらしい！";
-        message.innerHTML = "てんさい！ ぜんもんせいかい！<br>さすがだね！";
+        // 🌟 ご指定のパーフェクトテキストに変更 🌟
+        title.innerHTML = "パーフェクト！<br>ぜんもんせいかい！<br>すごいね！";
+        message.innerHTML = "てんさい！ さすがだね！";
         retryBtn.style.display = 'none'; 
+        
+        // 🌟 上品な紙吹雪をスタート 🌟
+        startConfetti();
       }
 
       showScreen('result-screen');
+    }
+
+    // =========================================
+    // 上品で軽量なCanvas紙吹雪（Confetti）演出
+    // =========================================
+    let confettiAnimationId = null;
+
+    function startConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ['#0072B2', '#D55E00', '#009E73', '#E69F00', '#CC79A7', '#F0E442'];
+
+      // 控えめで上品な量（35個）に設定
+      for (let i = 0; i < 35; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 4 + 2,
+          d: Math.random() * 15 + 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          tilt: Math.random() * 10 - 10,
+          tiltAngleIncremental: Math.random() * 0.07 + 0.05,
+          tiltAngle: 0
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p) => {
+          ctx.beginPath();
+          ctx.lineWidth = p.r;
+          ctx.strokeStyle = p.color;
+          ctx.moveTo(p.x + p.tilt + p.r, p.y);
+          ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
+          ctx.stroke();
+        });
+
+        update();
+      }
+
+      function update() {
+        particles.forEach((p) => {
+          p.tiltAngle += p.tiltAngleIncremental;
+          p.y += (Math.cos(p.tiltAngle) + 1 + p.r / 2) * 0.5;
+          p.x += Math.sin(p.tiltAngle) * 0.5;
+
+          // 画面下に落ちたら上に戻す（ループ）
+          if (p.y > canvas.height) {
+            p.y = -10;
+            p.x = Math.random() * canvas.width;
+          }
+        });
+        confettiAnimationId = requestAnimationFrame(draw);
+      }
+
+      draw();
+
+      // 約4秒後に自動で止まる上品設計
+      setTimeout(() => {
+        stopConfetti();
+      }, 4000);
+    }
+
+    function stopConfetti() {
+      if (confettiAnimationId) {
+        cancelAnimationFrame(confettiAnimationId);
+        confettiAnimationId = null;
+      }
+      const canvas = document.getElementById('confetti-canvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
     }
 
     window.onload = loadSettings;

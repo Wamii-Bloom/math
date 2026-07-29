@@ -13,10 +13,11 @@
 
   <style>
     /* =========================================
-       全体・共通デザイン
+       全体・共通デザイン (文字を全体的に太く！)
        ========================================= */
     body {
       font-family: 'Hiragino Maru Gothic ProN', 'Rounded M+ 1c', sans-serif;
+      font-weight: bold; /* 🌟 全体を太文字にしました 🌟 */
       background-color: #f7f7f7;
       color: #222222;
       text-align: center;
@@ -46,17 +47,35 @@
       margin-bottom: 15px;
     }
     
-    /* 🌟 音ボタンを文字入りのスタイリッシュな形に変更！ 🌟 */
+    /* 🌟 音ボタン：オンの時は色付きに！ 🌟 */
     .sound-toggle {
-      background: white; border: 2px solid #cccccc; border-radius: 20px;
-      padding: 5px 15px; font-size: 0.95rem; cursor: pointer;
+      font-family: inherit; font-weight: bold;
+      border-radius: 20px; padding: 8px 16px; font-size: 1rem; cursor: pointer;
       display: flex; justify-content: center; align-items: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #555555; font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+    .sound-toggle.on {
+      background-color: #D55E00; color: white; border: 2px solid #D55E00;
+    }
+    .sound-toggle.off {
+      background-color: #eeeeee; color: #777777; border: 2px solid #cccccc;
+    }
+
+    /* 🌟 問題数ボタン：選択肢があることが分かるデザイン！ 🌟 */
+    .q-count-wrapper {
+      position: relative;
     }
     .q-count-select {
-      font-size: 1rem; padding: 6px 12px; border-radius: 20px;
-      border: 2px solid #cccccc; background-color: white; font-weight: bold;
-      color: #555555; outline: none;
+      font-family: inherit; font-size: 1.1rem; padding: 8px 30px 8px 15px; 
+      border-radius: 20px; border: 2px solid #555555; background-color: white; 
+      font-weight: bold; color: #222222; outline: none; appearance: none; 
+      cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .q-count-wrapper::after {
+      content: '▼'; position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%); pointer-events: none;
+      font-size: 0.8rem; color: #555555;
     }
 
     .mode-buttons {
@@ -65,7 +84,7 @@
     }
     .mode-btn {
       font-family: inherit; background-color: white; border: 2px solid #cccccc;
-      color: #555555; font-size: 1rem; padding: 12px 2px; border-radius: 12px;
+      color: #555555; font-size: 1.1rem; padding: 12px 2px; border-radius: 12px;
       font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       transition: all 0.2s ease; touch-action: manipulation;
     }
@@ -75,16 +94,9 @@
     }
     
     .weak-btn {
-      grid-column: span 2;
-      background-color: #fff9e6;
-      border: 2px dashed #E69F00; 
-      color: #D55E00;
-      font-size: 1.1rem;
-      padding: 15px 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
+      grid-column: span 2; background-color: #fff9e6; border: 2px dashed #E69F00; 
+      color: #D55E00; font-size: 1.2rem; padding: 15px 5px;
+      display: flex; justify-content: center; align-items: center; gap: 10px;
     }
     .weak-btn.active {
       background-color: #ffe8aa; border: 2px solid #D55E00; color: #D55E00;
@@ -94,18 +106,17 @@
       padding: 2px 10px; font-size: 0.9rem; font-weight: bold;
     }
 
-    /* 🌟 記録表示のアイコンをシンプルな記号に変更 🌟 */
     .record-box {
       background: transparent; border: none; padding: 5px;
       width: 90%; max-width: 300px; margin-bottom: 20px;
-      font-size: 0.9rem; position: relative;
+      font-size: 1rem; position: relative;
     }
     .record-box div { margin: 3px 0; }
-    .best-time { color: #666666; font-weight: bold;} 
-    .last-time { color: #888888; font-weight: bold;}
+    .best-time { color: #666666; } 
+    .last-time { color: #888888; }
     .reset-btn {
       font-family: inherit; background: transparent; border: 1px solid #cccccc;
-      border-radius: 20px; padding: 4px 12px; font-size: 0.8rem;
+      border-radius: 20px; padding: 4px 12px; font-size: 0.8rem; font-weight: bold;
       color: #999999; cursor: pointer; margin-top: 8px;
     }
 
@@ -117,17 +128,16 @@
       width: 95%; max-width: 340px; margin-bottom: 15px;
     }
     
-    /* 🌟 戻るボタンをシンプルな ◁ に変更 🌟 */
+    /* 🌟 子どもに一番やさしい「◀ もどる」ボタンに進化！ 🌟 */
     .back-btn {
       font-family: inherit; background: white; border: 2px solid #555555;
-      border-radius: 50%; width: 45px; height: 45px; font-size: 1.4rem;
+      border-radius: 20px; padding: 6px 14px; font-size: 1.1rem; font-weight: bold;
       color: #222222; cursor: pointer; display: flex; justify-content: center;
       align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0;
-      padding-right: 4px; /* ◁のバランス調整 */
     }
     
     .timer-display, .progress {
-      font-size: 1.1rem; font-weight: bold; color: #222222; background: white;
+      font-size: 1.2rem; color: #222222; background: white;
       padding: 5px 15px; border-radius: 20px; border: 2px solid #dddddd;
     }
     .timer-display { color: #D55E00; }
@@ -149,18 +159,15 @@
       box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
     .question {
-      font-size: 3.5rem; font-weight: bold; letter-spacing: 5px;
-      color: #222222; z-index: 3;
+      font-size: 3.8rem; letter-spacing: 5px; color: #222222; z-index: 3;
     }
     
-    /* 🌟 ⭕️❌をスタイリッシュな 〇✕ の記号に変更 🌟 */
+    /* 🌟 ご要望通り、⭕️❌を復活させました！ 🌟 */
     .maru-mark, .batsu-mark {
       font-family: inherit; position: absolute; font-size: 8rem; opacity: 0;
       pointer-events: none; transition: opacity 0.2s ease-in-out; z-index: 4;
     }
-    .maru-mark { color: #D55E00; }
-    .batsu-mark { color: #0072B2; }
-    .maru-mark.show, .batsu-mark.show { opacity: 0.7; }
+    .maru-mark.show, .batsu-mark.show { opacity: 0.8; }
 
     .choices-container {
       display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
@@ -171,7 +178,7 @@
       font-weight: bold; border: none; border-radius: 10px; cursor: pointer;
       box-shadow: 0 4px 6px rgba(0,0,0,0.2); touch-action: manipulation;
       display: flex; justify-content: center; align-items: center;
-      height: 55px; font-size: 1.6rem;
+      height: 55px; font-size: 1.8rem;
     }
     .choice-btn:active { transform: scale(0.95); }
     .choice-btn.wrong { background-color: #cccccc; color: #777777; box-shadow: none; }
@@ -181,12 +188,12 @@
        ボタン共通・結果画面・アニメーション
        ========================================= */
     button.action-btn {
-      font-family: inherit; font-size: 1.2rem; padding: 15px 20px; border: none;
+      font-family: inherit; font-size: 1.3rem; padding: 15px 20px; border: none;
       border-radius: 30px; font-weight: bold; cursor: pointer; touch-action: manipulation;
       box-shadow: 0 4px 6px rgba(0,0,0,0.2); width: 90%; max-width: 320px;
       margin-bottom: 10px; white-space: normal; line-height: 1.4;
     }
-    .btn-start { background-color: #009E73; color: white; font-size: 1.5rem; padding: 18px 20px;}
+    .btn-start { background-color: #009E73; color: white; font-size: 1.6rem; padding: 18px 20px;}
     .btn-retry { background-color: #CC79A7; color: white; margin-top: 10px;}
 
     @keyframes popIn {
@@ -201,13 +208,13 @@
     }
     .anime-active { animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     
-    .result-title { font-size: 1.8rem; color: #222222; margin-bottom: 15px; font-weight: bold; line-height: 1.3;}
-    .result-time { font-size: 2.8rem; color: #D55E00; font-weight: bold; margin-bottom: 20px; }
-    .result-message { font-size: 1.3rem; margin-bottom: 20px; font-weight: bold; color: #0072B2; }
+    .result-title { font-size: 1.8rem; color: #222222; margin-bottom: 15px; line-height: 1.3;}
+    .result-time { font-size: 3rem; color: #D55E00; margin-bottom: 20px; }
+    .result-message { font-size: 1.3rem; margin-bottom: 20px; color: #0072B2; }
     
     .new-record { 
       padding: 10px 20px; border-radius: 20px; font-size: 1.2rem; margin-bottom: 15px; 
-      display: none; font-weight: bold; border: 3px solid #D55E00; animation: rainbowPulse 1s infinite;
+      display: none; border: 3px solid #D55E00; animation: rainbowPulse 1s infinite;
     }
   </style>
 </head>
@@ -221,12 +228,14 @@
     
     <!-- 音のON/OFFと問題数の設定 -->
     <div class="settings-bar">
-      <button class="sound-toggle" id="sound-btn" onclick="toggleSound()">♪ おと ON</button>
-      <select class="q-count-select" id="q-count">
-        <option value="10">10もん</option>
-        <option value="20">20もん</option>
-        <option value="all" selected>ぜんぶ</option>
-      </select>
+      <button id="sound-btn" class="sound-toggle on" onclick="toggleSound()">♪ おと ON</button>
+      <div class="q-count-wrapper">
+        <select class="q-count-select" id="q-count">
+          <option value="10">10もん</option>
+          <option value="20">20もん</option>
+          <option value="all" selected>ぜんぶ</option>
+        </select>
+      </div>
     </div>
     
     <!-- モード選択 -->
@@ -255,7 +264,7 @@
        ========================================= -->
   <div id="play-screen" class="screen">
     <div class="top-bar">
-      <button class="back-btn" onclick="goToStart()">◁</button>
+      <button class="back-btn" onclick="goToStart()">◀ もどる</button>
       <div class="timer-display"><span id="current-time">00:00</span></div>
       <div class="progress"><span id="current-q">1</span> / <span id="total-q">45</span></div>
     </div>
@@ -264,8 +273,8 @@
       <div class="card-ring"></div>
       <div class="card-hole"></div>
       <div class="question" id="question">1 + 1</div>
-      <div class="maru-mark" id="maru-mark">〇</div>
-      <div class="batsu-mark" id="batsu-mark">✕</div>
+      <div class="maru-mark" id="maru-mark">⭕️</div>
+      <div class="batsu-mark" id="batsu-mark">❌</div>
     </div>
 
     <div id="choices-container" class="choices-container"></div>
@@ -282,7 +291,7 @@
       <div class="result-message" id="result-message"></div>
       
       <button id="retry-btn" class="action-btn btn-retry" onclick="startRetry()" style="display: none;">もう１回 ちょうせん！</button>
-      <button class="action-btn btn-start" onclick="goToStart()" style="background-color: #555555;">◁ さいしょにもどる</button>
+      <button class="action-btn btn-start" onclick="goToStart()" style="background-color: #555555;">◀ さいしょにもどる</button>
     </div>
   </div>
 
@@ -291,12 +300,14 @@
        ========================================= -->
   <script>
     // -------------------------
-    // 初期設定・サービスワーカー
+    // 初期設定・サービスワーカー (最新の推奨方式)
     // -------------------------
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=' + new Date().getTime())
-          .catch(err => console.log('SW error:', err));
+        navigator.serviceWorker.register('./sw.js').then(registration => {
+          // Safariでも確実に新しい情報をチェックする魔法
+          registration.update();
+        }).catch(err => console.log('SW error:', err));
       });
     }
 
@@ -372,18 +383,30 @@
     // -------------------------
     // 画面や設定の切り替え機能
     // -------------------------
+    function updateSoundUI() {
+      const btn = document.getElementById('sound-btn');
+      if (AppState.isSoundOn) {
+        btn.innerText = '♪ おと ON';
+        btn.className = 'sound-toggle on';
+      } else {
+        btn.innerText = '♪ おと OFF';
+        btn.className = 'sound-toggle off';
+      }
+    }
+
     function toggleSound() {
       AppState.isSoundOn = !AppState.isSoundOn;
       localStorage.setItem('soundPref', AppState.isSoundOn);
-      document.getElementById('sound-btn').innerText = AppState.isSoundOn ? '♪ おと ON' : '♪ おと OFF';
+      updateSoundUI();
     }
 
+    // 🌟 ページを開いた瞬間に、保存された音設定をボタンに反映します！ 🌟
     function loadSettings() {
       const savedSound = localStorage.getItem('soundPref');
       if (savedSound !== null) {
         AppState.isSoundOn = savedSound === 'true';
-        document.getElementById('sound-btn').innerText = AppState.isSoundOn ? '♪ おと ON' : '♪ おと OFF';
       }
+      updateSoundUI();
       updateRecordsDisplay();
     }
 
@@ -653,7 +676,6 @@
         }
       }
 
-      // 🌟 てんさい！の言葉に変更 🌟
       if (AppState.wrongQuestions.length > 0) {
         title.innerHTML = "✨ がんばったね！ ✨";
         message.innerHTML = `あやふやなもんだいが ${AppState.wrongQuestions.length}問 あったよ！<br>つぎはもっとできる！✨`;

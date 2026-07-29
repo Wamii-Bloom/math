@@ -50,7 +50,7 @@
       margin-bottom: 15px;
     }
     
-    /* 🌟 音ボタン：Google Material Symbols を使用したスタイリッシュな丸ボタン 🌟 */
+    /* 音ボタン（Google Material Symbols） */
     .sound-toggle {
       font-family: 'Material Symbols Rounded';
       font-weight: normal;
@@ -109,7 +109,7 @@
       color: #0072B2; box-shadow: 0 2px 6px rgba(0,114,178,0.2);
     }
     
-    /* 🌟 「にがて」ボタン：シンプルでスッキリしたデザインに！ 🌟 */
+    /* 🌟 「にがて」ボタン：Google Material Symbolsの鉛筆アイコンを使用 🌟 */
     .weak-btn {
       grid-column: span 2; 
       background-color: white; 
@@ -120,7 +120,12 @@
       display: flex; 
       justify-content: center; 
       align-items: center; 
-      gap: 8px;
+      gap: 6px;
+    }
+    .weak-icon {
+      font-family: 'Material Symbols Rounded';
+      font-size: 20px;
+      font-weight: normal;
     }
     .weak-btn.active {
       background-color: #fff8eb; 
@@ -163,11 +168,28 @@
       width: 95%; max-width: 340px; margin-bottom: 15px;
     }
     
+    /* 🌟 戻るボタン：Google Material Symbols の丸いアイコンボタンに変更 🌟 */
     .back-btn {
-      font-family: inherit; background: white; border: 2px solid #555555;
-      border-radius: 20px; padding: 6px 14px; font-size: 1rem; font-weight: bold;
-      color: #222222; cursor: pointer; display: flex; justify-content: center;
-      align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0;
+      font-family: 'Material Symbols Rounded';
+      font-size: 24px;
+      font-weight: normal;
+      background: white; 
+      border: 2px solid #555555;
+      border-radius: 50%; 
+      width: 46px; 
+      height: 46px; 
+      color: #222222; 
+      cursor: pointer; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+      flex-shrink: 0;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .back-btn:active {
+      background-color: #eeeeee;
     }
     
     .timer-display, .progress {
@@ -250,7 +272,6 @@
       display: none; border: 3px solid #D55E00; animation: rainbowPulse 1s infinite;
     }
 
-    /* 🌟 上品な紙吹雪用 Canvas 🌟 */
     #confetti-canvas {
       position: absolute;
       top: 0;
@@ -271,7 +292,6 @@
     <h1>けいさんカード</h1>
     
     <div class="settings-bar">
-      <!-- 🌟 音ボタン：Google Material Symbols アイコンのみ 🌟 -->
       <button id="sound-btn" class="sound-toggle on" onclick="toggleSound()">volume_up</button>
       <div class="q-count-wrapper">
         <select class="q-count-select" id="q-count">
@@ -287,9 +307,9 @@
       <button class="mode-btn" id="btn-add2" onclick="selectMode('add2')">たしざん2</button>
       <button class="mode-btn" id="btn-sub1" onclick="selectMode('sub1')">ひきざん1</button>
       <button class="mode-btn" id="btn-sub2" onclick="selectMode('sub2')">ひきざん2</button>
-      <!-- 🌟 「にがて」ボタン：鉛筆アイコン付きのスマートな5つ目のモード 🌟 -->
+      <!-- 🌟 「にがて」ボタン：Google Material Symbolsの鉛筆アイコン（edit）を使用 🌟 -->
       <button class="mode-btn weak-btn" id="btn-weak" onclick="selectMode('weak')">
-        ✏️ にがて <span class="weak-badge" id="weak-badge">0</span>
+        <span class="weak-icon">edit</span> にがて <span class="weak-badge" id="weak-badge">0</span>
       </button>
     </div>
     <input type="hidden" id="mode" value="add1">
@@ -308,7 +328,8 @@
        ========================================= -->
   <div id="play-screen" class="screen">
     <div class="top-bar">
-      <button class="back-btn" onclick="goToStart()">◀ もどる</button>
+      <!-- 🌟 戻るボタン：Google Material Symbols の矢印アイコン（arrow_back）を使用 🌟 -->
+      <button class="back-btn" onclick="goToStart()">arrow_back</button>
       <div class="timer-display"><span id="current-time">00:00</span></div>
       <div class="progress"><span id="current-q">1</span> / <span id="total-q">45</span></div>
     </div>
@@ -328,18 +349,16 @@
        3. 結果画面
        ========================================= -->
   <div id="result-screen" class="screen">
-    <!-- 上品な紙吹雪を描画するキャンバス -->
     <canvas id="confetti-canvas"></canvas>
 
     <div id="result-content" style="z-index: 11; position: relative;">
       <div class="result-title" id="result-title">がんばったね！</div>
-      <!-- 🌟 新記録のときだけ 🎉 を表示するバッジ 🌟 -->
       <div id="new-record-badge" class="new-record">🎉 ドドドドーン！ 新記録達成！<br>すごすぎる！ 🎉</div>
       <div class="result-time" id="final-time">00:00</div>
       <div class="result-message" id="result-message"></div>
       
       <button id="retry-btn" class="action-btn btn-retry" onclick="startRetry()" style="display: none;">もう１回 ちょうせん！</button>
-      <button class="action-btn btn-start" onclick="goToStart()" style="background-color: #555555;">◀ さいしょにもどる</button>
+      <button class="action-btn btn-start" onclick="goToStart()" style="background-color: #555555;">もどる</button>
     </div>
   </div>
 
@@ -421,7 +440,6 @@
       }
     }
 
-    // 🌟 音ボタンのアイコン切り替え（Material Symbols） 🌟
     function updateSoundUI() {
       const btn = document.getElementById('sound-btn');
       if (AppState.isSoundOn) {
@@ -718,21 +736,16 @@
         retryBtn.style.display = 'inline-block'; 
       } else {
         playSound('perfect');
-        // 🌟 ご指定のパーフェクトテキストに変更 🌟
         title.innerHTML = "パーフェクト！<br>ぜんもんせいかい！<br>すごいね！";
         message.innerHTML = "てんさい！ さすがだね！";
         retryBtn.style.display = 'none'; 
         
-        // 🌟 上品な紙吹雪をスタート 🌟
         startConfetti();
       }
 
       showScreen('result-screen');
     }
 
-    // =========================================
-    // 上品で軽量なCanvas紙吹雪（Confetti）演出
-    // =========================================
     let confettiAnimationId = null;
 
     function startConfetti() {
@@ -744,7 +757,6 @@
       const particles = [];
       const colors = ['#0072B2', '#D55E00', '#009E73', '#E69F00', '#CC79A7', '#F0E442'];
 
-      // 控えめで上品な量（35個）に設定
       for (let i = 0; i < 35; i++) {
         particles.push({
           x: Math.random() * canvas.width,
@@ -778,7 +790,6 @@
           p.y += (Math.cos(p.tiltAngle) + 1 + p.r / 2) * 0.5;
           p.x += Math.sin(p.tiltAngle) * 0.5;
 
-          // 画面下に落ちたら上に戻す（ループ）
           if (p.y > canvas.height) {
             p.y = -10;
             p.x = Math.random() * canvas.width;
@@ -789,7 +800,6 @@
 
       draw();
 
-      // 約4秒後に自動で止まる上品設計
       setTimeout(() => {
         stopConfetti();
       }, 4000);

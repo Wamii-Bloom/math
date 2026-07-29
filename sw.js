@@ -1,4 +1,4 @@
-const CACHE_NAME = 'keisan-app-v2';
+const CACHE_NAME = 'keisan-app-v3';
 const urlsToCache = [
   './',
   './index.html',
@@ -9,9 +9,7 @@ const urlsToCache = [
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
   );
 });
 
@@ -30,14 +28,16 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// 常に最新版をチェックする仕組み（Network First）
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        return caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, response.clone());
-          return response;
+        const resClone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, resClone);
         });
+        return response;
       })
       .catch(() => {
         return caches.match(event.request);

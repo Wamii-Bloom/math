@@ -50,7 +50,6 @@
       margin-bottom: 15px;
     }
     
-    /* 🌟 音ボタン：アイコンサイズを28pxに微調整して押しやすくスマートに 🌟 */
     .sound-toggle {
       font-family: 'Material Symbols Rounded';
       font-weight: normal;
@@ -93,7 +92,6 @@
       font-size: 0.7rem; color: #555555;
     }
 
-    /* モード選択ボタン */
     .mode-buttons {
       display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
       margin-bottom: 15px; width: 95%; max-width: 360px; 
@@ -167,7 +165,6 @@
       width: 95%; max-width: 340px; margin-bottom: 15px;
     }
     
-    /* 🌟 戻るボタン：iOSライクな rounded な矢印 (arrow_back_ios_new) に変更 🌟 */
     .back-btn {
       font-family: 'Material Symbols Rounded';
       font-size: 22px;
@@ -186,7 +183,7 @@
       flex-shrink: 0;
       outline: none;
       transition: all 0.2s ease;
-      padding-right: 2px; /* 視覚的な中心合わせ */
+      padding-right: 2px;
     }
     .back-btn:active {
       background-color: #eeeeee;
@@ -198,6 +195,7 @@
     }
     .timer-display { color: #D55E00; }
 
+    /* 🌟 計算カード本体（リングをなくしてスッキリとした形にしました） 🌟 */
     .flashcard {
       position: relative; background-color: #ffffff; border: 2px solid #cccccc;
       border-radius: 15px; width: 85%; max-width: 320px; height: 150px;
@@ -209,18 +207,13 @@
       background-color: #f7f7f7; border-radius: 50%; border: 1px solid #cccccc;
       box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1); z-index: 1;
     }
-    .card-ring {
-      position: absolute; top: -15px; left: 17px; width: 16px; height: 40px;
-      border: 4px solid #aaaaaa; border-radius: 15px; z-index: 2;
-      box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
     .question {
-      font-size: 3.8rem; letter-spacing: 5px; color: #222222; z-index: 3;
+      font-size: 3.8rem; letter-spacing: 5px; color: #222222; z-index: 2;
     }
     
     .maru-mark, .batsu-mark {
       font-family: inherit; position: absolute; font-size: 8rem; opacity: 0;
-      pointer-events: none; transition: opacity 0.2s ease-in-out; z-index: 4;
+      pointer-events: none; transition: opacity 0.2s ease-in-out; z-index: 3;
     }
     .maru-mark.show, .batsu-mark.show { opacity: 0.8; }
 
@@ -327,14 +320,12 @@
        ========================================= -->
   <div id="play-screen" class="screen">
     <div class="top-bar">
-      <!-- 🌟 戻るボタン：iOSらしい丸みのある矢印 (arrow_back_ios_new) に変更 🌟 -->
       <button class="back-btn" onclick="goToStart()">arrow_back_ios_new</button>
       <div class="timer-display"><span id="current-time">00:00</span></div>
       <div class="progress"><span id="current-q">1</span> / <span id="total-q">45</span></div>
     </div>
 
     <div class="flashcard">
-      <div class="card-ring"></div>
       <div class="card-hole"></div>
       <div class="question" id="question">1 + 1</div>
       <div class="maru-mark" id="maru-mark">⭕️</div>
@@ -735,7 +726,6 @@
         retryBtn.style.display = 'inline-block'; 
       } else {
         playSound('perfect');
-        // 🌟 ご指定のすっきりしたパーフェクト文章に変更 🌟
         title.innerHTML = "パーフェクト！<br>ぜんもんせいかい！<br><br>すごい！";
         message.innerHTML = "";
         retryBtn.style.display = 'none'; 
@@ -757,7 +747,6 @@
       const particles = [];
       const colors = ['#0072B2', '#D55E00', '#009E73', '#E69F00', '#CC79A7', '#F0E442'];
 
-      // 少し控えめで上品な量（30個）に調整
       for (let i = 0; i < 30; i++) {
         particles.push({
           x: Math.random() * canvas.width,
@@ -801,7 +790,6 @@
 
       draw();
 
-      // 🌟 表示時間を約3秒に短縮 🌟
       setTimeout(() => {
         stopConfetti();
       }, 3000);

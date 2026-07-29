@@ -13,11 +13,11 @@
 
   <style>
     /* =========================================
-       全体・共通デザイン (文字を全体的に太く！)
+       全体・共通デザイン
        ========================================= */
     body {
       font-family: 'Hiragino Maru Gothic ProN', 'Rounded M+ 1c', sans-serif;
-      font-weight: bold; /* 🌟 全体を太文字にしました 🌟 */
+      font-weight: bold; 
       background-color: #f7f7f7;
       color: #222222;
       text-align: center;
@@ -47,7 +47,6 @@
       margin-bottom: 15px;
     }
     
-    /* 🌟 音ボタン：オンの時は色付きに！ 🌟 */
     .sound-toggle {
       font-family: inherit; font-weight: bold;
       border-radius: 20px; padding: 8px 16px; font-size: 1rem; cursor: pointer;
@@ -56,13 +55,16 @@
       transition: all 0.2s ease;
     }
     .sound-toggle.on {
-      background-color: #D55E00; color: white; border: 2px solid #D55E00;
+      background-color: #D55E00; 
+      color: white; 
+      border: 2px solid #D55E00;
     }
     .sound-toggle.off {
-      background-color: #eeeeee; color: #777777; border: 2px solid #cccccc;
+      background-color: white; 
+      color: #999999; 
+      border: 2px solid #cccccc;
     }
 
-    /* 🌟 問題数ボタン：選択肢があることが分かるデザイン！ 🌟 */
     .q-count-wrapper {
       position: relative;
     }
@@ -111,7 +113,7 @@
       width: 90%; max-width: 300px; margin-bottom: 20px;
       font-size: 1rem; position: relative;
     }
-    .record-box div { margin: 3px 0; }
+    .record-box div { margin: 4px 0; }
     .best-time { color: #666666; } 
     .last-time { color: #888888; }
     .reset-btn {
@@ -128,7 +130,6 @@
       width: 95%; max-width: 340px; margin-bottom: 15px;
     }
     
-    /* 🌟 子どもに一番やさしい「◀ もどる」ボタンに進化！ 🌟 */
     .back-btn {
       font-family: inherit; background: white; border: 2px solid #555555;
       border-radius: 20px; padding: 6px 14px; font-size: 1.1rem; font-weight: bold;
@@ -162,7 +163,6 @@
       font-size: 3.8rem; letter-spacing: 5px; color: #222222; z-index: 3;
     }
     
-    /* 🌟 ご要望通り、⭕️❌を復活させました！ 🌟 */
     .maru-mark, .batsu-mark {
       font-family: inherit; position: absolute; font-size: 8rem; opacity: 0;
       pointer-events: none; transition: opacity 0.2s ease-in-out; z-index: 4;
@@ -213,7 +213,7 @@
     .result-message { font-size: 1.3rem; margin-bottom: 20px; color: #0072B2; }
     
     .new-record { 
-      padding: 10px 20px; border-radius: 20px; font-size: 1.2rem; margin-bottom: 15px; 
+      padding: 12px 20px; border-radius: 20px; font-size: 1.3rem; margin-bottom: 15px; 
       display: none; border: 3px solid #D55E00; animation: rainbowPulse 1s infinite;
     }
   </style>
@@ -226,7 +226,6 @@
   <div id="start-screen" class="screen active">
     <h1>けいさんカード</h1>
     
-    <!-- 音のON/OFFと問題数の設定 -->
     <div class="settings-bar">
       <button id="sound-btn" class="sound-toggle on" onclick="toggleSound()">♪ おと ON</button>
       <div class="q-count-wrapper">
@@ -238,7 +237,6 @@
       </div>
     </div>
     
-    <!-- モード選択 -->
     <div class="mode-buttons">
       <button class="mode-btn active" id="btn-add1" onclick="selectMode('add1')">たしざん1</button>
       <button class="mode-btn" id="btn-add2" onclick="selectMode('add2')">たしざん2</button>
@@ -250,10 +248,11 @@
     </div>
     <input type="hidden" id="mode" value="add1">
 
+    <!-- 🌟 記号をなくし、「ベストタイム」「ぜんかい」の文字だけにスッキリ整理 🌟 -->
     <div class="record-box">
-      <div class="best-time">★ ベストタイム: <span id="best-time-display">--:--</span></div>
-      <div class="last-time">・ ぜんかい: <span id="last-time-display">--:--</span></div>
-      <button class="reset-btn" onclick="resetRecord()">↺ 記録をリセット</button>
+      <div class="best-time">ベストタイム: <span id="best-time-display">--:--</span></div>
+      <div class="last-time">ぜんかい: <span id="last-time-display">--:--</span></div>
+      <button class="reset-btn" onclick="resetRecord()">きろくをリセット</button>
     </div>
 
     <button class="action-btn btn-start" onclick="startGame()">よーい、スタート！</button>
@@ -285,8 +284,10 @@
        ========================================= -->
   <div id="result-screen" class="screen">
     <div id="result-content">
-      <div class="result-title" id="result-title">✨ がんばったね！ ✨</div>
-      <div id="new-record-badge" class="new-record">✨ ドドドドーン！ 新記録達成！<br>すごすぎる！ ✨</div>
+      <!-- 🌟 余計な絵文字を削ぎ落とし、シンプルに！ 🌟 -->
+      <div class="result-title" id="result-title">がんばったね！</div>
+      <!-- 🌟 新記録の時だけ派手に目立たせる！ 🌟 -->
+      <div id="new-record-badge" class="new-record">🎉 ドドドドーン！ 新記録達成！<br>すごすぎる！ 🎉</div>
       <div class="result-time" id="final-time">00:00</div>
       <div class="result-message" id="result-message"></div>
       
@@ -299,13 +300,9 @@
        アプリのプログラム
        ========================================= -->
   <script>
-    // -------------------------
-    // 初期設定・サービスワーカー (最新の推奨方式)
-    // -------------------------
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then(registration => {
-          // Safariでも確実に新しい情報をチェックする魔法
           registration.update();
         }).catch(err => console.log('SW error:', err));
       });
@@ -323,9 +320,6 @@
       isSoundOn: true
     };
 
-    // -------------------------
-    // 音の魔法（Web Audio API）
-    // -------------------------
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
 
@@ -380,9 +374,6 @@
       }
     }
 
-    // -------------------------
-    // 画面や設定の切り替え機能
-    // -------------------------
     function updateSoundUI() {
       const btn = document.getElementById('sound-btn');
       if (AppState.isSoundOn) {
@@ -400,7 +391,6 @@
       updateSoundUI();
     }
 
-    // 🌟 ページを開いた瞬間に、保存された音設定をボタンに反映します！ 🌟
     function loadSettings() {
       const savedSound = localStorage.getItem('soundPref');
       if (savedSound !== null) {
@@ -425,7 +415,7 @@
     function resetRecord() {
       const mode = document.getElementById('mode').value;
       if (mode === 'weak') {
-        alert("『にがてなもんだい』は、1回で正解するとリストから消えていくよ！✨");
+        alert("『にがてなもんだい』は、1回で正解するとリストから消えていくよ！");
         return;
       }
       localStorage.removeItem(`bestTime_${mode}`);
@@ -470,9 +460,6 @@
       showScreen('start-screen');
     }
 
-    // -------------------------
-    // 問題の生成とゲーム進行
-    // -------------------------
     function generateAllQuestions() {
       let questions = [];
       const mode = document.getElementById('mode').value;
@@ -677,13 +664,13 @@
       }
 
       if (AppState.wrongQuestions.length > 0) {
-        title.innerHTML = "✨ がんばったね！ ✨";
-        message.innerHTML = `あやふやなもんだいが ${AppState.wrongQuestions.length}問 あったよ！<br>つぎはもっとできる！✨`;
+        title.innerHTML = "がんばったね！";
+        message.innerHTML = `あやふやなもんだいが ${AppState.wrongQuestions.length}問 あったよ！<br>つぎはもっとできる！`;
         retryBtn.style.display = 'inline-block'; 
       } else {
         playSound('perfect');
-        title.innerHTML = "✨ パーフェクト！<br>すばらしい！ ✨";
-        message.innerHTML = "✨ てんさい！ ぜんもんせいかい！<br>さすがだね！ ✨";
+        title.innerHTML = "パーフェクト！<br>すばらしい！";
+        message.innerHTML = "てんさい！ ぜんもんせいかい！<br>さすがだね！";
         retryBtn.style.display = 'none'; 
       }
 

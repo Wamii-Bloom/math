@@ -18,6 +18,10 @@
     /* =========================================
        全体・共通デザイン
        ========================================= */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
     body {
       font-family: 'Hiragino Maru Gothic ProN', 'Rounded M+ 1c', sans-serif;
       font-weight: bold; 
@@ -31,12 +35,26 @@
       height: 100vh;
       justify-content: center;
       align-items: center;
-      box-sizing: border-box;
       overflow: hidden;
+      user-select: none;
     }
-    h1 { font-size: 1.8rem; color: #222222; margin-bottom: 10px; margin-top: 5px; }
-    .screen { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; }
-    .screen.active { display: flex; }
+    h1 { 
+      font-size: 1.8rem; 
+      color: #222222; 
+      margin-top: 5px; 
+      margin-bottom: 10px; 
+      letter-spacing: 1px;
+    }
+    .screen { 
+      display: none; 
+      flex-direction: column; 
+      align-items: center; 
+      width: 100%; 
+      position: relative; 
+    }
+    .screen.active { 
+      display: flex; 
+    }
 
     /* =========================================
        スタート画面のUI
@@ -50,6 +68,7 @@
       margin-bottom: 15px;
     }
     
+    /* 音ボタン（Material Symbols） */
     .sound-toggle {
       font-family: 'Material Symbols Rounded';
       font-weight: normal;
@@ -103,11 +122,15 @@
       font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       transition: all 0.2s ease; touch-action: manipulation;
     }
+    .mode-btn:active {
+      transform: scale(0.97);
+    }
     .mode-btn.active {
       border: 2px solid #0072B2; background-color: #e6f2f8;
       color: #0072B2; box-shadow: 0 2px 6px rgba(0,114,178,0.2);
     }
     
+    /* 「もういちど」ボタン（旧：にがて） */
     .weak-btn {
       grid-column: span 2; 
       background-color: white; 
@@ -122,7 +145,7 @@
     }
     .weak-icon {
       font-family: 'Material Symbols Rounded';
-      font-size: 20px;
+      font-size: 22px;
       font-weight: normal;
     }
     .weak-btn.active {
@@ -135,8 +158,8 @@
       background: #dddddd; 
       color: #555555; 
       border-radius: 10px;
-      padding: 1px 6px; 
-      font-size: 0.75rem; 
+      padding: 1px 7px; 
+      font-size: 0.8rem; 
       font-weight: bold;
     }
     .weak-btn.active .weak-badge {
@@ -146,7 +169,7 @@
 
     .record-box {
       background: transparent; border: none; padding: 5px;
-      width: 90%; max-width: 300px; margin-bottom: 20px;
+      width: 90%; max-width: 300px; margin-bottom: 18px;
       font-size: 0.95rem; position: relative;
     }
     .record-box div { margin: 5px 0; }
@@ -155,8 +178,10 @@
     .reset-btn {
       font-family: inherit; background: transparent; border: 1px solid #cccccc;
       border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; font-weight: bold;
-      color: #999999; cursor: pointer; margin-top: 8px;
+      color: #999999; cursor: pointer; margin-top: 6px;
+      transition: all 0.2s ease;
     }
+    .reset-btn:active { background-color: #eeeeee; }
 
     /* =========================================
        プレイ画面のUI
@@ -166,7 +191,7 @@
       width: 95%; max-width: 340px; margin-bottom: 15px;
     }
     
-    /* 🌟 戻るボタン：直感的に分かりやすい arrow_back に変更 🌟 */
+    /* 戻るボタン（1年生にもわかりやすい arrow_back） */
     .back-btn {
       font-family: 'Material Symbols Rounded';
       font-size: 24px;
@@ -188,20 +213,21 @@
     }
     .back-btn:active {
       background-color: #eeeeee;
+      transform: scale(0.95);
     }
     
     .timer-display, .progress {
       font-size: 1.1rem; color: #222222; background: white;
-      padding: 5px 15px; border-radius: 20px; border: 2px solid #dddddd;
+      padding: 6px 16px; border-radius: 20px; border: 2px solid #dddddd;
     }
     .timer-display { color: #D55E00; }
 
     /* 計算カード本体（リングなし、穴のみ維持） */
     .flashcard {
       position: relative; background-color: #ffffff; border: 2px solid #cccccc;
-      border-radius: 15px; width: 85%; max-width: 320px; height: 150px;
+      border-radius: 16px; width: 88%; max-width: 320px; height: 150px;
       display: flex; justify-content: center; align-items: center;
-      box-shadow: 3px 5px 15px rgba(0,0,0,0.1); margin-bottom: 25px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08); margin-bottom: 22px;
     }
     .card-hole {
       position: absolute; top: 15px; left: 15px; width: 20px; height: 20px;
@@ -209,14 +235,14 @@
       box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1); z-index: 1;
     }
     .question {
-      font-size: 3.8rem; letter-spacing: 5px; color: #222222; z-index: 2;
+      font-size: 3.8rem; letter-spacing: 4px; color: #222222; z-index: 2;
     }
     
     .maru-mark, .batsu-mark {
       font-family: inherit; position: absolute; font-size: 8rem; opacity: 0;
       pointer-events: none; transition: opacity 0.2s ease-in-out; z-index: 3;
     }
-    .maru-mark.show, .batsu-mark.show { opacity: 0.8; }
+    .maru-mark.show, .batsu-mark.show { opacity: 0.85; }
 
     .choices-container {
       display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
@@ -224,12 +250,13 @@
     }
     .choice-btn {
       font-family: inherit; background-color: #0072B2; color: white;
-      font-weight: bold; border: none; border-radius: 10px; cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2); touch-action: manipulation;
+      font-weight: bold; border: none; border-radius: 12px; cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15); touch-action: manipulation;
       display: flex; justify-content: center; align-items: center;
-      height: 55px; font-size: 1.8rem;
+      height: 56px; font-size: 1.8rem;
+      transition: background-color 0.15s ease, transform 0.1s ease;
     }
-    .choice-btn:active { transform: scale(0.95); }
+    .choice-btn:active { transform: scale(0.93); }
     .choice-btn.wrong { background-color: #cccccc; color: #777777; box-shadow: none; }
     .choice-btn.correct { background-color: #D55E00; }
 
@@ -237,27 +264,35 @@
        ボタン共通・結果画面・アニメーション
        ========================================= */
     button.action-btn {
-      font-family: inherit; font-size: 1.2rem; padding: 14px 20px; border: none;
+      font-family: inherit; font-size: 1.25rem; padding: 14px 20px; border: none;
       border-radius: 30px; font-weight: bold; cursor: pointer; touch-action: manipulation;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2); width: 90%; max-width: 320px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15); width: 90%; max-width: 320px;
       margin-bottom: 10px; white-space: normal; line-height: 1.4;
+      transition: transform 0.1s ease;
     }
+    button.action-btn:active { transform: scale(0.97); }
     .btn-start { background-color: #009E73; color: white; font-size: 1.5rem; padding: 16px 20px;}
     .btn-retry { background-color: #CC79A7; color: white; margin-top: 10px;}
 
     @keyframes popIn {
-      0% { transform: scale(0.5); opacity: 0; }
-      70% { transform: scale(1.1); opacity: 1; }
+      0% { transform: scale(0.6); opacity: 0; }
+      70% { transform: scale(1.05); opacity: 1; }
       100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 1; }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); }
     }
     @keyframes rainbowPulse {
       0% { transform: scale(1); background-color: #F0E442; color: #222; }
-      50% { transform: scale(1.05); background-color: #ffb3ba; color: #b20000; }
+      50% { transform: scale(1.05); background-color: #ffcdd2; color: #b20000; }
       100% { transform: scale(1); background-color: #F0E442; color: #222; }
     }
-    .anime-active { animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    .anime-active { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     
-    /* 🌟 結果画面：大きな余白を整理しスッキリ配置 🌟 */
+    /* 結果画面のレイアウト（余白の最適化） */
     .result-title { 
       font-size: 1.6rem; 
       color: #222222; 
@@ -266,19 +301,19 @@
     }
     .result-message { 
       font-size: 1.2rem; 
-      margin-bottom: 15px; 
+      margin-bottom: 14px; 
       color: #0072B2; 
-      line-height: 1.3; 
+      line-height: 1.4; 
     }
     .result-time { 
       font-size: 2.8rem; 
       color: #D55E00; 
-      margin-bottom: 15px; 
+      margin-bottom: 16px; 
     }
     
     .new-record { 
-      padding: 10px 18px; border-radius: 20px; font-size: 1.1rem; margin-bottom: 12px; 
-      display: none; border: 3px solid #D55E00; animation: rainbowPulse 1s infinite;
+      padding: 10px 18px; border-radius: 20px; font-size: 1.1rem; margin-bottom: 14px; 
+      display: none; border: 3px solid #D55E00; animation: rainbowPulse 1s infinite, bounceIn 0.6s ease;
     }
 
     #confetti-canvas {
@@ -301,9 +336,9 @@
     <h1>けいさんカード</h1>
     
     <div class="settings-bar">
-      <button id="sound-btn" class="sound-toggle on" onclick="toggleSound()">volume_up</button>
+      <button id="sound-btn" class="sound-toggle on" onclick="toggleSound()" aria-label="おと">volume_up</button>
       <div class="q-count-wrapper">
-        <select class="q-count-select" id="q-count">
+        <select class="q-count-select" id="q-count" aria-label="もんだいすう">
           <option value="10">10もん</option>
           <option value="20">20もん</option>
           <option value="all" selected>ぜんぶ</option>
@@ -316,8 +351,9 @@
       <button class="mode-btn" id="btn-add2" onclick="selectMode('add2')">たしざん2</button>
       <button class="mode-btn" id="btn-sub1" onclick="selectMode('sub1')">ひきざん1</button>
       <button class="mode-btn" id="btn-sub2" onclick="selectMode('sub2')">ひきざん2</button>
+      <!-- 「もういちど」ボタン（1年生に分かりやすいネーミングに改善） -->
       <button class="mode-btn weak-btn" id="btn-weak" onclick="selectMode('weak')">
-        <span class="weak-icon">edit</span> にがて <span class="weak-badge" id="weak-badge">0</span>
+        <span class="weak-icon">replay</span> もういちど <span class="weak-badge" id="weak-badge">0</span>
       </button>
     </div>
     <input type="hidden" id="mode" value="add1">
@@ -336,8 +372,8 @@
        ========================================= -->
   <div id="play-screen" class="screen">
     <div class="top-bar">
-      <!-- 🌟 戻るボタンアイコンを arrow_back に変更 🌟 -->
-      <button class="back-btn" onclick="goToStart()">arrow_back</button>
+      <!-- 1年生にも直感的に伝わる arrow_back アイコン -->
+      <button class="back-btn" onclick="goToStart()" aria-label="もどる">arrow_back</button>
       <div class="timer-display"><span id="current-time">00:00</span></div>
       <div class="progress"><span id="current-q">1</span> / <span id="total-q">45</span></div>
     </div>
@@ -360,8 +396,7 @@
 
     <div id="result-content" style="z-index: 11; position: relative;">
       <div class="result-title" id="result-title">がんばったね！</div>
-      <div id="new-record-badge" class="new-record">🎉 ドドドドーン！ 新記録達成！<br>すごすぎる！ 🎉</div>
-      <!-- 🌟 褒め言葉の追加＆スッキリ配置 🌟 -->
+      <div id="new-record-badge" class="new-record">🎉 ドドドドーン！ しんきろく！<br>すごすぎる！ 🎉</div>
       <div class="result-message" id="result-message"></div>
       <div class="result-time" id="final-time">00:00</div>
       
@@ -489,7 +524,7 @@
     function resetRecord() {
       const mode = document.getElementById('mode').value;
       if (mode === 'weak') {
-        alert("『にがて』モードは、1回で正解するとリストから消えていくよ！");
+        alert("『もういちど』は、1かいで せいかいすると リストから きえるよ！");
         return;
       }
       localStorage.removeItem(`bestTime_${mode}`);
@@ -543,7 +578,7 @@
       if (mode === 'weak') {
         questions = JSON.parse(localStorage.getItem('weakQuestions') || '[]');
         if (questions.length === 0) {
-          alert("にがてなもんだいは まだないよ！ はなまるです！");
+          alert("もういちど れんしゅうする もんだいは まだないよ！ はなまるです！");
           selectMode('add1');
           return false;
         }
@@ -740,13 +775,12 @@
 
       if (AppState.wrongQuestions.length > 0) {
         title.innerHTML = "がんばったね！";
-        message.innerHTML = `あやふやなもんだいが ${AppState.wrongQuestions.length}問 あったよ！<br>つぎはもっとできる！`;
+        // 1年生にもやさしく伝わる短く前向きなメッセージ
+        message.innerHTML = `あやふやな もんだいが ${AppState.wrongQuestions.length}もん あったよ！<br>もういちど やってみよう！`;
         retryBtn.style.display = 'inline-block'; 
       } else {
         playSound('perfect');
-        // 🌟 文言変更：「パーフェクト！ / ぜんもんせいかい！ / すごい！」 🌟
         title.innerHTML = "パーフェクト！<br>ぜんもんせいかい！<br>すごい！";
-        // 🌟 メッセージ追加：「よくできました！」 🌟
         message.innerHTML = "よくできました！";
         retryBtn.style.display = 'none'; 
         
@@ -756,6 +790,9 @@
       showScreen('result-screen');
     }
 
+    /* =========================================
+       上品で軽量なCanvas紙吹雪（Confetti）演出
+       ========================================= */
     let confettiAnimationId = null;
 
     function startConfetti() {

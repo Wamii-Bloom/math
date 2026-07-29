@@ -50,12 +50,12 @@
       margin-bottom: 15px;
     }
     
-    /* 音ボタン（Google Material Symbols） */
+    /* 🌟 音ボタン：アイコンサイズを28pxに微調整して押しやすくスマートに 🌟 */
     .sound-toggle {
       font-family: 'Material Symbols Rounded';
       font-weight: normal;
       font-style: normal;
-      font-size: 24px;
+      font-size: 28px;
       border-radius: 50%; 
       width: 46px; 
       height: 46px; 
@@ -109,7 +109,6 @@
       color: #0072B2; box-shadow: 0 2px 6px rgba(0,114,178,0.2);
     }
     
-    /* 🌟 「にがて」ボタン：Google Material Symbolsの鉛筆アイコンを使用 🌟 */
     .weak-btn {
       grid-column: span 2; 
       background-color: white; 
@@ -168,10 +167,10 @@
       width: 95%; max-width: 340px; margin-bottom: 15px;
     }
     
-    /* 🌟 戻るボタン：Google Material Symbols の丸いアイコンボタンに変更 🌟 */
+    /* 🌟 戻るボタン：iOSライクな rounded な矢印 (arrow_back_ios_new) に変更 🌟 */
     .back-btn {
       font-family: 'Material Symbols Rounded';
-      font-size: 24px;
+      font-size: 22px;
       font-weight: normal;
       background: white; 
       border: 2px solid #555555;
@@ -187,6 +186,7 @@
       flex-shrink: 0;
       outline: none;
       transition: all 0.2s ease;
+      padding-right: 2px; /* 視覚的な中心合わせ */
     }
     .back-btn:active {
       background-color: #eeeeee;
@@ -263,7 +263,7 @@
     }
     .anime-active { animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     
-    .result-title { font-size: 1.7rem; color: #222222; margin-bottom: 12px; line-height: 1.4;}
+    .result-title { font-size: 1.6rem; color: #222222; margin-bottom: 12px; line-height: 1.4;}
     .result-time { font-size: 2.8rem; color: #D55E00; margin-bottom: 15px; }
     .result-message { font-size: 1.2rem; margin-bottom: 20px; color: #0072B2; line-height: 1.4; }
     
@@ -307,7 +307,6 @@
       <button class="mode-btn" id="btn-add2" onclick="selectMode('add2')">たしざん2</button>
       <button class="mode-btn" id="btn-sub1" onclick="selectMode('sub1')">ひきざん1</button>
       <button class="mode-btn" id="btn-sub2" onclick="selectMode('sub2')">ひきざん2</button>
-      <!-- 🌟 「にがて」ボタン：Google Material Symbolsの鉛筆アイコン（edit）を使用 🌟 -->
       <button class="mode-btn weak-btn" id="btn-weak" onclick="selectMode('weak')">
         <span class="weak-icon">edit</span> にがて <span class="weak-badge" id="weak-badge">0</span>
       </button>
@@ -328,8 +327,8 @@
        ========================================= -->
   <div id="play-screen" class="screen">
     <div class="top-bar">
-      <!-- 🌟 戻るボタン：Google Material Symbols の矢印アイコン（arrow_back）を使用 🌟 -->
-      <button class="back-btn" onclick="goToStart()">arrow_back</button>
+      <!-- 🌟 戻るボタン：iOSらしい丸みのある矢印 (arrow_back_ios_new) に変更 🌟 -->
+      <button class="back-btn" onclick="goToStart()">arrow_back_ios_new</button>
       <div class="timer-display"><span id="current-time">00:00</span></div>
       <div class="progress"><span id="current-q">1</span> / <span id="total-q">45</span></div>
     </div>
@@ -736,8 +735,9 @@
         retryBtn.style.display = 'inline-block'; 
       } else {
         playSound('perfect');
-        title.innerHTML = "パーフェクト！<br>ぜんもんせいかい！<br>すごいね！";
-        message.innerHTML = "てんさい！ さすがだね！";
+        // 🌟 ご指定のすっきりしたパーフェクト文章に変更 🌟
+        title.innerHTML = "パーフェクト！<br>ぜんもんせいかい！<br><br>すごい！";
+        message.innerHTML = "";
         retryBtn.style.display = 'none'; 
         
         startConfetti();
@@ -757,7 +757,8 @@
       const particles = [];
       const colors = ['#0072B2', '#D55E00', '#009E73', '#E69F00', '#CC79A7', '#F0E442'];
 
-      for (let i = 0; i < 35; i++) {
+      // 少し控えめで上品な量（30個）に調整
+      for (let i = 0; i < 30; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height - canvas.height,
@@ -800,9 +801,10 @@
 
       draw();
 
+      // 🌟 表示時間を約3秒に短縮 🌟
       setTimeout(() => {
         stopConfetti();
-      }, 4000);
+      }, 3000);
     }
 
     function stopConfetti() {
